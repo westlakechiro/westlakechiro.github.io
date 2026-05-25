@@ -27,6 +27,14 @@
   --bg-secondary:      #E8F1FB;
   --bg-tertiary:       #D8E8F7;
   --bg-deepest:        #CBDFF4;
+  --bg-warm:           #FBF6EC;
+  --bg-warm-edge:      #F3EBD8;
+  --accent-sage:       #6E978E;
+  --accent-sage-soft:  rgba(110, 151, 142, 0.16);
+  --accent-coral:      #C97A5F;
+  --accent-coral-soft: rgba(201, 122, 95, 0.16);
+  --accent-lavender:   #7C7CB1;
+  --accent-lavender-soft: rgba(124, 124, 177, 0.16);
   --text-primary:      #0F2942;
   --text-secondary:    #2E4A63;
   --text-muted:        #4C6982;
@@ -53,6 +61,14 @@
   --bg-secondary:      #112538;
   --bg-tertiary:       #173248;
   --bg-deepest:        #07121F;
+  --bg-warm:           #1A2233;
+  --bg-warm-edge:      #232C40;
+  --accent-sage:       #8FB6AC;
+  --accent-sage-soft:  rgba(143, 182, 172, 0.18);
+  --accent-coral:      #E29A82;
+  --accent-coral-soft: rgba(226, 154, 130, 0.18);
+  --accent-lavender:   #A2A2D8;
+  --accent-lavender-soft: rgba(162, 162, 216, 0.18);
   --text-primary:      #EAF2FB;
   --text-secondary:    #A7BACE;
   --text-muted:        #7790A6;
@@ -475,8 +491,14 @@ button { font: inherit; cursor: pointer; }
    THE WESTLAKE DIFFERENCE — SECTION 4
    ============================================================ */
 .diff {
+  position: relative;
   padding: 160px 0;
-  background: var(--bg-primary);
+  background: var(--bg-warm);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 100% 0%, var(--bg-warm-edge), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 0% 100%, var(--bg-warm-edge), transparent 60%);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
 }
 @media (max-width: 768px) { .diff { padding: 80px 0; } }
 
@@ -560,18 +582,48 @@ button { font: inherit; cursor: pointer; }
 .spine {
   position: relative;
   padding: 140px 0;
+  /* Inverted "step inside the body" section — always deep navy regardless of theme.
+     Variables are re-scoped so child elements automatically adapt. */
+  --bg-primary:        #08131F;
+  --bg-secondary:      #0F1F31;
+  --bg-tertiary:       #16314A;
+  --text-primary:      #EAF2FB;
+  --text-secondary:    #B6CADE;
+  --text-muted:        #7C95AC;
+  --border-subtle:     rgba(234, 242, 251, 0.10);
+  --border-medium:     rgba(234, 242, 251, 0.20);
+  --accent-amber:      #6DB6F2;
+  --accent-amber-hover:#8AC6F5;
+  --accent-amber-soft: rgba(109, 182, 242, 0.20);
   background: var(--bg-primary);
+  color: var(--text-primary);
   text-align: center;
   overflow: hidden;
 }
 .spine::before {
   content: "";
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 50% 50%,
-    rgba(46, 139, 192, 0.14) 0%,
-    rgba(46, 139, 192, 0.03) 35%,
-    transparent 65%);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 35%,
+      rgba(109, 182, 242, 0.16) 0%,
+      rgba(109, 182, 242, 0.05) 40%,
+      transparent 70%),
+    radial-gradient(ellipse 50% 40% at 50% 90%,
+      rgba(46, 139, 192, 0.10) 0%,
+      transparent 65%);
   pointer-events: none;
+}
+.spine::after {
+  /* very faint blueprint grid for "anatomy chart" texture */
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(109, 182, 242, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(109, 182, 242, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 30%, transparent 80%);
 }
 .spine-inner { position: relative; z-index: 1; }
 .spine h2 {
@@ -667,16 +719,6 @@ button { font: inherit; cursor: pointer; }
   margin-top: 18px;
 }
 
-.spinney-guide {
-  position: absolute;
-  left: -40px; bottom: -10px;
-  width: 110px;
-  z-index: 2;
-  filter: drop-shadow(0 10px 24px rgba(0,0,0,0.4));
-  animation: breathe 4s ease-in-out infinite;
-}
-@media (max-width: 768px) { .spinney-guide { display: none; } }
-
 @keyframes breathe {
   0%,100% { transform: scale(1.00); }
   50%     { transform: scale(1.015); }
@@ -731,23 +773,60 @@ button { font: inherit; cursor: pointer; }
               box-shadow 320ms ease,
               background 320ms ease;
   cursor: pointer;
-  min-height: 200px;
+  min-height: 220px;
   display: flex; flex-direction: column;
+  overflow: hidden;
+  /* per-card tone — overridden by data-tone variants below */
+  --tone:        var(--accent-amber);
+  --tone-soft:   var(--accent-amber-soft);
+  --tone-bg:     var(--bg-tertiary);
+}
+.cond-card[data-tone="sky"]      { --tone: var(--accent-teal);     --tone-soft: rgba(46, 139, 192, 0.14); --tone-bg: #E6F0FB; }
+.cond-card[data-tone="royal"]    { --tone: var(--accent-amber);    --tone-soft: var(--accent-amber-soft); --tone-bg: #DEE9F8; }
+.cond-card[data-tone="lavender"] { --tone: var(--accent-lavender); --tone-soft: var(--accent-lavender-soft); --tone-bg: #ECEAF5; }
+.cond-card[data-tone="sage"]     { --tone: var(--accent-sage);     --tone-soft: var(--accent-sage-soft); --tone-bg: #E5EFEB; }
+.cond-card[data-tone="coral"]    { --tone: var(--accent-coral);    --tone-soft: var(--accent-coral-soft); --tone-bg: #F5E6DF; }
+[data-theme="dark"] .cond-card[data-tone="sky"]      { --tone-bg: #16314A; }
+[data-theme="dark"] .cond-card[data-tone="royal"]    { --tone-bg: #14253D; }
+[data-theme="dark"] .cond-card[data-tone="lavender"] { --tone-bg: #1F213A; }
+[data-theme="dark"] .cond-card[data-tone="sage"]     { --tone-bg: #15282C; }
+[data-theme="dark"] .cond-card[data-tone="coral"]    { --tone-bg: #2C1F1B; }
+.cond-card { background: var(--tone-bg); }
+.cond-card::before {
+  /* corner color wash so cards don't read as identical stamps */
+  content: "";
+  position: absolute;
+  inset: auto -30% -30% auto;
+  width: 70%; aspect-ratio: 1;
+  background: radial-gradient(circle, var(--tone-soft) 0%, transparent 65%);
+  pointer-events: none;
+  transition: inset 360ms ease, opacity 360ms ease;
 }
 .cond-card:hover,
 .cond-card:focus-visible {
   transform: translateY(-4px);
-  border-color: var(--border-medium);
-  box-shadow: 0 0 0 1px var(--accent-amber-soft), 0 14px 40px rgba(0,0,0,0.4),
-              0 0 0 6px transparent;
+  border-color: var(--tone);
+  box-shadow: 0 0 0 1px var(--tone-soft), 0 18px 44px -16px rgba(15, 41, 66, 0.28);
 }
+.cond-card:hover::before { inset: auto -10% -10% auto; }
 .cond-card .num {
   font-family: "JetBrains Mono", monospace;
   font-size: 11px;
-  color: var(--accent-amber);
+  color: var(--tone);
   letter-spacing: 0.08em;
   margin-bottom: 18px;
+  position: relative; z-index: 1;
 }
+.cond-card .icon {
+  position: absolute;
+  top: 22px; right: 22px;
+  width: 38px; height: 38px;
+  color: var(--tone);
+  opacity: 0.55;
+  transition: opacity 240ms ease, transform 320ms ease;
+  z-index: 1;
+}
+.cond-card:hover .icon { opacity: 1; transform: rotate(-4deg) scale(1.08); }
 .cond-card .name {
   font-family: "Fraunces", serif;
   font-weight: 600;
@@ -756,18 +835,21 @@ button { font: inherit; cursor: pointer; }
   letter-spacing: -0.018em;
   color: var(--text-primary);
   margin-bottom: 8px;
+  position: relative; z-index: 1;
 }
 .cond-card .tease {
   font-size: 14px;
   line-height: 1.55;
   color: var(--text-secondary);
+  position: relative; z-index: 1;
 }
 .cond-card .arr {
   position: absolute;
   right: 22px; bottom: 20px;
   font-size: 18px;
-  color: var(--accent-amber);
+  color: var(--tone);
   transition: transform 240ms ease;
+  z-index: 1;
 }
 .cond-card:hover .arr { transform: translateX(4px); }
 
@@ -790,8 +872,23 @@ button { font: inherit; cursor: pointer; }
    TESTIMONIALS — SECTION 7
    ============================================================ */
 .testimonials {
+  position: relative;
   padding: 140px 0;
   background: var(--bg-primary);
+  background-image:
+    radial-gradient(ellipse 120% 70% at 85% -10%, rgba(46, 139, 192, 0.12), transparent 60%),
+    radial-gradient(ellipse 90% 60% at 5% 110%, rgba(30, 95, 203, 0.10), transparent 65%);
+  overflow: hidden;
+}
+.testimonials::before {
+  /* lake-horizon wash — soft watercolor band across the lower portion */
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 38%;
+  background:
+    radial-gradient(ellipse 70% 100% at 30% 100%, rgba(46, 139, 192, 0.08), transparent 70%),
+    radial-gradient(ellipse 50% 100% at 80% 100%, rgba(124, 124, 177, 0.06), transparent 70%);
+  pointer-events: none;
 }
 @media (max-width: 768px) { .testimonials { padding: 80px 0; } }
 .testimonials h2 {
@@ -921,51 +1018,51 @@ button { font: inherit; cursor: pointer; }
 
 .loc-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
 
-/* Map placeholder */
+/* Real embedded Google Map */
 .map {
   position: relative;
-  width: 100%; height: 460px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  min-height: 380px;
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
   overflow: hidden;
   background: var(--bg-tertiary);
+  box-shadow: 0 18px 48px -24px rgba(15, 41, 66, 0.30);
 }
-.map svg { width: 100%; height: 100%; display: block; }
-.map .pin {
-  position: absolute;
-  left: 56%; top: 48%;
-  width: 16px; height: 16px;
-  background: var(--accent-amber);
-  border-radius: 50%;
-  box-shadow: 0 0 0 6px var(--accent-amber-soft), 0 0 24px rgba(46,139,192,0.7);
-  animation: pulse 3s ease-in-out infinite;
+.map iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  /* very subtle tint to harmonize with the palette without obscuring labels */
+  filter: saturate(0.92) contrast(1.02);
 }
-.map .map-label {
+[data-theme="dark"] .map iframe {
+  /* Google Maps embed is light-only; soften so it doesn't blare against the dark UI */
+  filter: invert(0.88) hue-rotate(180deg) saturate(0.85) contrast(0.92);
+}
+.spine .map iframe {
+  filter: invert(0.88) hue-rotate(180deg) saturate(0.85) contrast(0.92);
+}
+.map-open {
   position: absolute;
-  font-family: "Fraunces", serif;
+  right: 14px; bottom: 14px;
+  font-family: "Inter Tight", sans-serif;
+  font-size: 13px;
   font-weight: 600;
-  font-size: 14px;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
-  padding: 6px 10px;
-  background: color-mix(in oklab, var(--bg-primary) 80%, transparent);
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  backdrop-filter: blur(8px);
+  color: #0F2942;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 41, 66, 0.10);
+  box-shadow: 0 8px 24px -10px rgba(15, 41, 66, 0.35);
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: gap 220ms ease, transform 220ms ease;
 }
-.map .map-label.pin-lbl  { left: 56%; top: 48%; transform: translate(20px, -30px); }
-.map .map-label.lake-lbl {
-  left: 22%; top: 72%;
-  font-style: italic;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px;
-  font-weight: 400;
-  background: transparent;
-  border: none;
-  color: var(--accent-teal);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
+.map-open:hover { gap: 10px; transform: translateY(-1px); }
+.map-open:focus-visible { outline: 2px solid var(--accent-amber); outline-offset: 2px; }
 
 /* ============================================================
    FOOTER — SECTION 9
@@ -1549,14 +1646,11 @@ footer {
       <div class="spine-label l-c2">Headaches</div>
       <div class="spine-label l-t6">Mid-back tension</div>
       <div class="spine-label l-l4">Lower back &amp; sciatica</div>
-
-      <img class="spinney-guide" src="assets/spinney.png"
-           alt="Spinney, the Westlake Chiropractic mascot">
     </div>
 
     <div class="reveal">
       <a href="#spine-experience" class="btn btn-amber btn-lg">Explore the Interactive Spine <span class="arrow" aria-hidden="true">→</span></a>
-      <div class="spine-caption">Click any vertebra. See what it controls. Understand your body.</div>
+      <div class="spine-caption">Rotate, zoom, and click any vertebra in the full interactive view.</div>
     </div>
   </div>
 </section>
@@ -1573,51 +1667,98 @@ footer {
     </div>
 
     <div class="cond-grid">
-      <!-- 8 visible cards on home; full 12 live on /conditions -->
-      <a class="cond-card reveal" href="#" tabindex="0">
+      <!-- 8 visible cards on home; full 12 live on /conditions.
+           data-tone drives per-card color; inline SVG icons hint at the body region. -->
+      <a class="cond-card reveal" href="#" tabindex="0" data-tone="royal">
         <div class="num">01</div>
+        <svg class="icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 6c1 3 1 6 0 9-2 4-2 8 0 12s2 7 0 9"/>
+          <path d="M26 6c-1 3-1 6 0 9 2 4 2 8 0 12s-2 7 0 9"/>
+          <path d="M14 12h12M14 18h12M14 24h12M14 30h12"/>
+        </svg>
         <div class="name">Lower Back Pain</div>
         <div class="tease">The most common reason patients walk through the door — and walk out feeling better.</div>
         <div class="arr" aria-hidden="true">→</div>
       </a>
-      <a class="cond-card reveal" href="#" tabindex="0">
+      <a class="cond-card reveal" href="#" tabindex="0" data-tone="sky">
         <div class="num">02</div>
+        <svg class="icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="20" cy="10" r="5"/>
+          <path d="M15 16c-2 3-2 6 0 8h10c2-2 2-5 0-8"/>
+          <path d="M16 24c-1 4 0 8 0 12M24 24c1 4 0 8 0 12"/>
+        </svg>
         <div class="name">Neck Pain</div>
         <div class="tease">Desk posture, sleep position, screen time. Gentle adjustments that hold.</div>
         <div class="arr" aria-hidden="true">→</div>
       </a>
-      <a class="cond-card reveal" href="#" tabindex="0">
+      <a class="cond-card reveal" href="#" tabindex="0" data-tone="lavender">
         <div class="num">03</div>
+        <svg class="icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 6v10c0 3 2 5 4 6l4 2"/>
+          <path d="M20 24l2 4 2 6"/>
+          <path d="M24 34l3-1M24 34l-2 2"/>
+          <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
+        </svg>
         <div class="name">Sciatica</div>
         <div class="tease">Radiating leg pain isn't your back's problem alone. We find the root.</div>
         <div class="arr" aria-hidden="true">→</div>
       </a>
-      <a class="cond-card reveal" href="#" tabindex="0">
+      <a class="cond-card reveal" href="#" tabindex="0" data-tone="sage">
         <div class="num">04</div>
+        <svg class="icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <ellipse cx="20" cy="20" rx="10" ry="12"/>
+          <path d="M14 14c2-2 4-3 6-3M26 14c-1-1-2-2-3-2"/>
+          <path d="M8 14l-3-2M8 20H4M8 26l-3 2M32 14l3-2M32 20h4M32 26l3 2"/>
+        </svg>
         <div class="name">Headaches</div>
         <div class="tease">Cervicogenic and tension headaches often start in the neck. We can help.</div>
         <div class="arr" aria-hidden="true">→</div>
       </a>
-      <a class="cond-card reveal" href="#" tabindex="0">
+      <a class="cond-card reveal" href="#" tabindex="0" data-tone="coral">
         <div class="num">05</div>
+        <svg class="icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="14" cy="14" r="4"/>
+          <path d="M14 18c-3 1-5 4-5 8v8"/>
+          <path d="M18 16c3 0 6 2 8 4l4 4"/>
+          <path d="M30 24l4 2"/>
+        </svg>
         <div class="name">Shoulder Pain</div>
         <div class="tease">Rotator, scapula, thoracic — three parts of one problem. Treated together.</div>
         <div class="arr" aria-hidden="true">→</div>
       </a>
-      <a class="cond-card reveal" href="#" tabindex="0">
+      <a class="cond-card reveal" href="#" tabindex="0" data-tone="sky">
         <div class="num">06</div>
+        <svg class="icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="20" cy="9" r="4"/>
+          <path d="M16 13c-3 2-3 6 0 10"/>
+          <path d="M24 13c3 2 3 6 0 10"/>
+          <path d="M30 8l-4 4M10 8l4 4"/>
+          <path d="M18 25l-2 8M22 25l2 8"/>
+        </svg>
         <div class="name">Whiplash</div>
         <div class="tease">After a collision, the window for conservative care matters. Don't wait.</div>
         <div class="arr" aria-hidden="true">→</div>
       </a>
-      <a class="cond-card reveal" href="#" tabindex="0">
+      <a class="cond-card reveal" href="#" tabindex="0" data-tone="sage">
         <div class="num">07</div>
+        <svg class="icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="22" cy="8" r="3"/>
+          <path d="M22 11l-4 8 3 4-2 8"/>
+          <path d="M21 23l5-2 4 5"/>
+          <path d="M18 19l-6-2"/>
+        </svg>
         <div class="name">Sports Injury</div>
         <div class="tease">Pickleball, golf, wakeboarding. Get back to the lake without losing the season.</div>
         <div class="arr" aria-hidden="true">→</div>
       </a>
-      <a class="cond-card reveal" href="#" tabindex="0">
+      <a class="cond-card reveal" href="#" tabindex="0" data-tone="lavender">
         <div class="num">08</div>
+        <svg class="icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="12" y="8" width="16" height="6" rx="3"/>
+          <ellipse cx="20" cy="18" rx="9" ry="4"/>
+          <rect x="12" y="22" width="16" height="6" rx="3"/>
+          <path d="M28 18l4 2M8 18l-4 2"/>
+        </svg>
         <div class="name">Herniated Disc</div>
         <div class="tease">Conservative care first. Many disc injuries resolve without surgery.</div>
         <div class="arr" aria-hidden="true">→</div>
@@ -1695,37 +1836,23 @@ footer {
 
         <div class="loc-ctas">
           <a href="tel:+15407210044" class="btn btn-amber btn-lg">Call Now</a>
-          <a href="#" class="btn btn-ghost btn-lg">Get Directions <span class="arrow" aria-hidden="true">→</span></a>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=70+Scruggs+Road+Suite+106+Moneta+VA+24121"
+             target="_blank" rel="noopener"
+             class="btn btn-ghost btn-lg">Get Directions <span class="arrow" aria-hidden="true">→</span></a>
         </div>
       </div>
 
       <div class="loc-right reveal">
-        <div class="map" role="img" aria-label="Map showing Westlake Chiropractic location near Smith Mountain Lake">
-          <svg viewBox="0 0 600 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <!-- subtle grid -->
-            <defs>
-              <pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M40 0H0V40" fill="none" stroke="rgba(46,139,192,0.10)" stroke-width="1"/>
-              </pattern>
-            </defs>
-            <rect width="600" height="460" fill="url(#g)"/>
-            <!-- Lake -->
-            <path d="M-20 380 Q60 260 180 320 Q260 360 320 320 Q420 240 520 320 Q580 360 620 320 L620 480 L-20 480 Z"
-                  fill="rgba(46,139,192,0.22)" stroke="rgba(46,139,192,0.45)" stroke-width="1"/>
-            <path d="M-20 380 Q60 260 180 320 Q260 360 320 320 Q420 240 520 320 Q580 360 620 320"
-                  fill="none" stroke="rgba(46,139,192,0.55)" stroke-width="1.2" stroke-dasharray="3 6"/>
-            <!-- Roads -->
-            <path d="M0 200 L600 220" stroke="rgba(46,139,192,0.28)" stroke-width="3" fill="none"/>
-            <path d="M180 0 L260 460" stroke="rgba(46,139,192,0.20)" stroke-width="2" fill="none"/>
-            <path d="M400 0 L360 460" stroke="rgba(46,139,192,0.16)" stroke-width="1.5" fill="none"/>
-            <path d="M0 90  L600 110" stroke="rgba(46,139,192,0.14)" stroke-width="1.5" fill="none"/>
-            <!-- Route 122 highlight -->
-            <path d="M0 210 L600 230" stroke="rgba(30,95,203,0.55)" stroke-width="4" fill="none"/>
-            <text x="20" y="206" fill="rgba(30,95,203,0.95)" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">ROUTE 122</text>
-          </svg>
-          <div class="pin" aria-hidden="true"></div>
-          <div class="map-label pin-lbl">Westlake Chiropractic</div>
-          <div class="map-label lake-lbl">Smith Mountain Lake</div>
+        <div class="map" aria-label="Map of Westlake Chiropractic near Smith Mountain Lake">
+          <iframe
+            title="Westlake Chiropractic on OpenStreetMap"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=-79.6800%2C37.0800%2C-79.5400%2C37.1700&layer=mapnik&marker=37.1280%2C-79.6100"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <a class="map-open" href="https://www.google.com/maps/dir/?api=1&destination=70+Scruggs+Road+Suite+106+Moneta+VA+24121"
+             target="_blank" rel="noopener">
+            Open in Google Maps <span aria-hidden="true">→</span>
+          </a>
         </div>
       </div>
 
