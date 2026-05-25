@@ -1365,76 +1365,192 @@ footer {
 /* Spinney chat modal */
 .chat-modal {
   position: fixed;
-  right: 24px; bottom: 110px;
+  right: 24px; bottom: 188px;
   z-index: 95;
-  width: 340px;
+  width: 400px;
+  height: 560px;
   max-width: calc(100vw - 48px);
-  background: var(--bg-secondary);
+  max-height: calc(100vh - 220px);
+  background: var(--bg-primary);
   border: 1px solid var(--border-medium);
-  border-radius: 16px;
-  padding: 22px;
-  box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 24px var(--accent-amber-soft);
+  border-radius: 18px;
+  box-shadow: 0 32px 80px rgba(15, 41, 66, 0.32), 0 0 32px var(--accent-amber-soft);
   display: none;
-  transform: translateY(10px);
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(12px) scale(0.98);
   opacity: 0;
   transition: transform 280ms cubic-bezier(.2,.7,.2,1), opacity 220ms ease;
 }
-.chat-modal.open {
-  display: block;
+.chat-modal.open { display: flex; }
+.chat-modal.in { transform: translateY(0) scale(1); opacity: 1; }
+
+.chat-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 14px 14px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+  flex-shrink: 0;
 }
-.chat-modal.in {
-  transform: translateY(0);
-  opacity: 1;
+.chat-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(109, 182, 242, 0.25), transparent 65%),
+    var(--bg-tertiary);
+  flex-shrink: 0;
 }
-.chat-modal h4 {
+.chat-avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: 50% 22%;
+}
+.chat-header-text { flex: 1; min-width: 0; }
+.chat-name {
   font-family: "Fraunces", serif;
   font-weight: 700;
   font-size: 18px;
-  margin: 0 0 6px;
+  color: var(--text-primary);
   letter-spacing: -0.01em;
 }
-.chat-modal p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin: 0 0 16px;
-  line-height: 1.55;
-}
-.chat-modal .chat-msg {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-subtle);
-  border-radius: 10px;
-  padding: 12px 14px;
-  font-size: 13px;
-  color: var(--text-primary);
-  margin-bottom: 14px;
-}
-.chat-modal .chat-msg .from {
+.chat-status {
   font-family: "JetBrains Mono", monospace;
   font-size: 10px;
-  color: var(--accent-amber);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 4px;
-}
-.chat-modal .chat-disclaim {
-  font-size: 10.5px;
-  font-style: italic;
   color: var(--text-muted);
-  line-height: 1.5;
-  border-top: 1px solid var(--border-subtle);
-  padding-top: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 2px;
 }
 .chat-modal .close-x {
-  position: absolute;
-  top: 12px; right: 12px;
-  width: 26px; height: 26px;
+  width: 30px; height: 30px;
   background: transparent;
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
   color: var(--text-secondary);
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 180ms ease, border-color 180ms ease;
 }
+.chat-modal .close-x:hover { color: var(--text-primary); border-color: var(--border-medium); }
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 16px;
+  display: flex; flex-direction: column;
+  gap: 10px;
+  scroll-behavior: smooth;
+}
+.chat-messages::-webkit-scrollbar { width: 6px; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+
+.chat-msg {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  animation: chat-msg-in 280ms cubic-bezier(.2,.7,.2,1);
+}
+@keyframes chat-msg-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.chat-msg.chat-spinney {
+  align-self: flex-start;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  border-bottom-left-radius: 4px;
+}
+.chat-msg.chat-user {
+  align-self: flex-end;
+  background: var(--accent-amber);
+  color: #11243A;
+  border-bottom-right-radius: 4px;
+}
+.chat-msg.chat-system {
+  align-self: stretch;
+  max-width: 100%;
+  background: transparent;
+  border: 1px dashed var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-style: italic;
+  text-align: center;
+  padding: 8px 12px;
+}
+.chat-msg a {
+  color: inherit;
+  text-decoration: underline;
+  font-weight: 600;
+}
+.chat-msg.chat-user a { color: #11243A; }
+.chat-msg strong { font-weight: 600; }
+
+.chat-chips {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 0 16px 12px;
+  flex-shrink: 0;
+}
+.chat-chip {
+  font-family: "Inter Tight", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+.chat-chip:hover { color: var(--text-primary); border-color: var(--accent-amber); background: var(--accent-amber-soft); }
+.chat-chip:focus-visible { outline: 2px solid var(--accent-amber); outline-offset: 2px; }
+
+.chat-input-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 12px 14px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+  flex-shrink: 0;
+}
+#chatInput {
+  flex: 1;
+  height: 40px;
+  padding: 0 14px;
+  font-family: "Inter Tight", sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+#chatInput::placeholder { color: var(--text-muted); }
+#chatInput:focus { border-color: var(--accent-amber); box-shadow: 0 0 0 3px var(--accent-amber-soft); }
+#chatInput:disabled { opacity: 0.6; cursor: not-allowed; }
+#chatSend {
+  width: 40px; height: 40px;
+  background: var(--accent-spark);
+  color: #11243A;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 180ms ease, transform 180ms ease;
+}
+#chatSend svg { width: 18px; height: 18px; }
+#chatSend:hover { background: var(--accent-spark-hover); }
+#chatSend:active { transform: scale(0.94); }
+#chatSend:disabled { opacity: 0.45; cursor: not-allowed; background: var(--bg-tertiary); color: var(--text-muted); }
+#chatSend:focus-visible { outline: 2px solid var(--accent-amber); outline-offset: 2px; }
 
 /* Sticky mobile book bar */
 .mobile-book {
@@ -2120,16 +2236,26 @@ footer {
 </button>
 
 <div class="chat-modal" id="chatModal" role="dialog" aria-label="Spinney AI chat" aria-hidden="true">
-  <button class="close-x" id="chatClose" aria-label="Close chat">✕</button>
-  <h4>Hi, I'm Spinney.</h4>
-  <p>The AI assistant for Westlake Chiropractic — coming soon.</p>
-  <div class="chat-msg">
-    <div class="from">SPINNEY</div>
-    Ask me about conditions, what to expect on your first visit, or how chiropractic care works. I'll point you in the right direction.
-  </div>
-  <div class="chat-disclaim">
-    AI chat assistant — coming soon. Spinney is not a medical professional and does not provide diagnosis or treatment. For medical advice contact Dr. Herlehy directly. For emergencies call 911.
-  </div>
+  <header class="chat-header">
+    <div class="chat-avatar"><img src="assets/spinney.png" alt=""></div>
+    <div class="chat-header-text">
+      <div class="chat-name">Spinney</div>
+      <div class="chat-status" id="chatStatus">AI assistant · loading…</div>
+    </div>
+    <button class="close-x" id="chatClose" aria-label="Close chat" type="button">✕</button>
+  </header>
+  <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-label="Chat messages"></div>
+  <div class="chat-chips" id="chatChips" hidden aria-label="Suggested questions"></div>
+  <form class="chat-input-bar" id="chatForm" autocomplete="off">
+    <input type="text" id="chatInput" placeholder="Ask Spinney a question…"
+           aria-label="Ask Spinney a question" maxlength="500" disabled>
+    <button type="submit" id="chatSend" aria-label="Send message" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </button>
+  </form>
 </div>
 
 <!-- ===================================================
@@ -2626,28 +2752,211 @@ else window.addEventListener('load', initInteractiveSpine);
 })();
 
 /* ============================================================
-   SPINNEY CHAT — open/close modal
+   SPINNEY CHAT — open/close modal + KB-driven Q&A
+   Loads data/spinney-knowledge-base.json on first open. Red-flag
+   triggers route to the emergency response BEFORE any matching.
+   No LLM call — pure token-overlap matching against the question +
+   alt phrasings. If nothing matches above threshold, falls back to
+   the phone number. All answers are pre-written and compliance-vetted.
    ============================================================ */
 (function () {
-  const btn = document.getElementById('spinneyLauncher');
+  const launcher = document.getElementById('spinneyLauncher');
   const modal = document.getElementById('chatModal');
   const close = document.getElementById('chatClose');
+  const messages = document.getElementById('chatMessages');
+  const chips = document.getElementById('chatChips');
+  const form = document.getElementById('chatForm');
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('chatSend');
+  const status = document.getElementById('chatStatus');
+  if (!launcher || !modal) return;
+
+  const KB_URL = new URL('data/spinney-knowledge-base.json', document.baseURI).href;
+  const STOP = new Set(['a','an','the','is','are','am','do','does','did','can','could','would','should','will','i','my','me','you','your','we','us','our','it','this','that','to','of','in','on','at','for','from','by','with','about','what','where','when','how','why','who','have','has','had','be','been','being','as','if','or','and','but','not','any','all','some']);
+  const CHIP_IDS = ['P002','P001','I001','C022','F001','T008'];
+
+  let kb = null;
+  let kbPromise = null;
+  let initialized = false;
+
+  function loadKB() {
+    if (kbPromise) return kbPromise;
+    kbPromise = fetch(KB_URL).then(r => {
+      if (!r.ok) throw new Error('KB fetch ' + r.status);
+      return r.json();
+    }).then(j => { kb = j; return j; }).catch(err => {
+      console.error('Spinney KB load failed', err);
+      return null;
+    });
+    return kbPromise;
+  }
+  // Pre-fetch so the first open feels instant
+  loadKB();
+
   function open() {
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
     requestAnimationFrame(() => modal.classList.add('in'));
+    initialize();
   }
   function shut() {
     modal.classList.remove('in');
     modal.setAttribute('aria-hidden', 'true');
     setTimeout(() => modal.classList.remove('open'), 280);
   }
-  btn.addEventListener('click', (e) => {
+
+  launcher.addEventListener('click', (e) => {
     e.stopPropagation();
     modal.classList.contains('open') ? shut() : open();
   });
   close.addEventListener('click', shut);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') shut(); });
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function normalize(s) {
+    return String(s).toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+  function tokenize(s) {
+    return normalize(s).split(' ').filter(t => t.length > 1 && !STOP.has(t));
+  }
+
+  function addMessage(html, who) {
+    const div = document.createElement('div');
+    div.className = 'chat-msg chat-' + who;
+    div.innerHTML = html;
+    messages.appendChild(div);
+    requestAnimationFrame(() => { messages.scrollTop = messages.scrollHeight; });
+  }
+
+  function ctaHtml(cta) {
+    if (!cta) return '';
+    const p = kb && kb.practice;
+    const phone = p ? p.phone : '(540) 721-0044';
+    const phoneTel = 'tel:+1' + phone.replace(/\D/g, '');
+    if (cta === 'call')       return ' <a href="' + phoneTel + '">' + phone + '</a>';
+    if (cta === 'book')       return ' <a href="' + phoneTel + '">Call ' + phone + ' to book</a>';
+    if (cta === 'directions') return ' <a href="' + (p && p.directions_url) + '" target="_blank" rel="noopener">Open in Google Maps</a>';
+    if (cta === '911')        return ' <strong>Call 911</strong>';
+    return '';
+  }
+
+  function checkRedFlag(text) {
+    if (!kb || !kb.red_flags) return false;
+    const n = ' ' + normalize(text) + ' ';
+    for (const trigger of kb.red_flags.triggers) {
+      if (n.includes(' ' + normalize(trigger) + ' ') || n.includes(normalize(trigger))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function findBestMatch(text) {
+    if (!kb || !kb.qa) return null;
+    const queryTokens = tokenize(text);
+    if (queryTokens.length === 0) return null;
+    const queryNorm = normalize(text);
+
+    let bestEntry = null;
+    let bestScore = 0;
+
+    for (const entry of kb.qa) {
+      const phrasings = [entry.q, ...(entry.alt || [])];
+      let entryBest = 0;
+      for (const phrase of phrasings) {
+        const phraseNorm = normalize(phrase);
+        const phraseTokens = new Set(tokenize(phrase));
+        if (phraseTokens.size === 0) continue;
+
+        let overlap = 0;
+        for (const qt of queryTokens) {
+          if (phraseTokens.has(qt)) {
+            overlap += 1;
+          } else if (qt.length > 4) {
+            // partial match: query token is substring of a phrase token (or vice versa)
+            for (const pt of phraseTokens) {
+              if (pt.length > 4 && (pt.includes(qt) || qt.includes(pt))) { overlap += 0.5; break; }
+            }
+          }
+        }
+        let score = overlap / queryTokens.length;
+        // Substring bonus when the user's whole input lives inside (or vice versa)
+        if (queryNorm.length > 4 && (phraseNorm.includes(queryNorm) || queryNorm.includes(phraseNorm))) {
+          score += 0.35;
+        }
+        if (score > entryBest) entryBest = score;
+      }
+      if (entryBest > bestScore) { bestScore = entryBest; bestEntry = entry; }
+    }
+    return bestScore >= 0.42 ? { entry: bestEntry, score: bestScore } : null;
+  }
+
+  function handleQuery(text) {
+    addMessage(escapeHtml(text), 'user');
+    if (!kb) {
+      addMessage(escapeHtml("Sorry — I'm having trouble loading right now. Please call us at (540) 721-0044.") + ctaHtml('call'), 'spinney');
+      return;
+    }
+    if (checkRedFlag(text)) {
+      addMessage('<strong>Important:</strong> ' + escapeHtml(kb.red_flags.emergency_response), 'spinney');
+      return;
+    }
+    const result = findBestMatch(text);
+    if (result) {
+      addMessage(escapeHtml(result.entry.a) + ctaHtml(result.entry.cta), 'spinney');
+    } else {
+      addMessage(escapeHtml(kb.fallback_unknown) + ctaHtml('call'), 'spinney');
+    }
+  }
+
+  function buildChips() {
+    if (!kb || !kb.qa) return;
+    chips.innerHTML = '';
+    for (const id of CHIP_IDS) {
+      const entry = kb.qa.find(q => q.id === id);
+      if (!entry) continue;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chat-chip';
+      btn.textContent = entry.q;
+      btn.addEventListener('click', () => {
+        chips.hidden = true;
+        handleQuery(entry.q);
+      });
+      chips.appendChild(btn);
+    }
+    chips.hidden = false;
+  }
+
+  function initialize() {
+    if (initialized) return;
+    initialized = true;
+    loadKB().then(loaded => {
+      if (!loaded) {
+        addMessage("I'm having trouble loading right now. The best way to reach us is by phone: <a href=\"tel:+15407210044\">(540) 721-0044</a>.", 'spinney');
+        status.textContent = 'AI assistant · offline';
+        return;
+      }
+      addMessage(escapeHtml(loaded.compliance.required_disclaimer), 'spinney');
+      addMessage('What can I help you with today?', 'spinney');
+      buildChips();
+      input.disabled = false;
+      sendBtn.disabled = false;
+      status.textContent = 'AI assistant · online';
+      setTimeout(() => input.focus(), 100);
+    });
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    chips.hidden = true; // hide chips after first user message
+    handleQuery(text);
+  });
 })();
 
 /* ============================================================
