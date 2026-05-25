@@ -626,7 +626,8 @@ button { font: inherit; cursor: pointer; }
   -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 30%, transparent 80%);
 }
 .spine-inner { position: relative; z-index: 1; }
-.spine h2 {
+.spine-head { text-align: center; margin-bottom: 56px; }
+.spine-head h2 {
   font-family: "Fraunces", serif;
   font-weight: 700;
   font-size: clamp(48px, 6.5vw, 80px);
@@ -635,88 +636,196 @@ button { font: inherit; cursor: pointer; }
   color: var(--text-primary);
   margin: 0 0 12px;
 }
-.spine h3 {
+.spine-head h3 {
   font-family: "Fraunces", serif;
   font-weight: 400;
   font-style: italic;
   font-size: clamp(24px, 3vw, 36px);
   color: var(--text-secondary);
-  margin: 0 0 64px;
+  margin: 0;
 }
 
-.spine-viz {
+.spine-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 40px;
+  max-width: 1120px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+@media (max-width: 900px) {
+  .spine-stage { grid-template-columns: 1fr; gap: 24px; }
+}
+
+.spine-canvas-wrap {
   position: relative;
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto 56px;
-  height: 480px;
-  display: flex; align-items: center; justify-content: center;
+  aspect-ratio: 4 / 5;
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse 65% 75% at 50% 50%, rgba(109, 182, 242, 0.10), transparent 70%),
+    rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  touch-action: none; /* let JS handle pan/zoom on the canvas */
 }
-.spine-svg {
-  height: 100%;
-  width: auto;
-  opacity: 0.85;
+.spine-canvas-wrap canvas {
+  width: 100%; height: 100%;
+  display: block;
+  cursor: grab;
 }
-.spine-svg path,
-.spine-svg rect.vert {
-  fill: var(--text-primary);
-  fill-opacity: 0.28;
-}
-.spine-svg .disc {
-  fill: var(--text-primary);
-  fill-opacity: 0.10;
-}
-.spine-dot {
-  position: absolute;
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  background: var(--accent-amber);
-  box-shadow: 0 0 0 4px var(--accent-amber-soft), 0 0 24px rgba(46,139,192,0.6);
-  animation: pulse 3s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%,100% { transform: scale(1);   box-shadow: 0 0 0 4px var(--accent-amber-soft), 0 0 24px rgba(46,139,192,0.5); }
-  50%     { transform: scale(1.18); box-shadow: 0 0 0 8px var(--accent-amber-soft), 0 0 36px rgba(46,139,192,0.85); }
-}
-.spine-dot.d-c2 { top: 14%;  left: calc(50% + 38px); }
-.spine-dot.d-c2 { animation-delay: 0s; }
-.spine-dot.d-t6 { top: 41%;  left: calc(50% - 50px); animation-delay: .8s; }
-.spine-dot.d-l4 { top: 70%;  left: calc(50% + 42px); animation-delay: 1.6s; }
+.spine-canvas-wrap.is-dragging canvas { cursor: grabbing; }
 
-.spine-label {
+/* SVG fallback shown only when Three.js / WebGL unavailable */
+.spine-svg-fallback {
+  position: absolute; inset: 0;
+  margin: auto;
+  width: 70%; height: 90%;
+  opacity: 0.55;
+  display: none;
+}
+.spine-svg-fallback path,
+.spine-svg-fallback rect.vert {
+  fill: var(--text-primary);
+  fill-opacity: 0.32;
+}
+.spine-canvas-wrap.fallback canvas,
+.spine-canvas-wrap.fallback .spine-hint,
+.spine-canvas-wrap.fallback .spine-controls { display: none; }
+.spine-canvas-wrap.fallback .spine-svg-fallback { display: block; }
+
+.spine-hint {
   position: absolute;
+  left: 16px; bottom: 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: rgba(8, 19, 31, 0.65);
+  padding: 7px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 320ms ease;
+}
+.spine-canvas-wrap.has-touched .spine-hint { opacity: 0; }
+
+.spine-controls {
+  position: absolute;
+  right: 16px; bottom: 16px;
+  display: flex; gap: 8px;
+}
+.spine-control-btn {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(8, 19, 31, 0.65);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 7px 12px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
+}
+.spine-control-btn:hover { color: var(--text-primary); border-color: var(--accent-amber); }
+.spine-control-btn[aria-pressed="true"] { color: var(--accent-amber); border-color: var(--accent-amber); }
+.spine-control-btn:focus-visible { outline: 2px solid var(--accent-amber); outline-offset: 2px; }
+
+.spine-info {
+  display: flex; flex-direction: column;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 36px 32px;
+  min-height: 100%;
+  transition: border-color 320ms ease, background 320ms ease;
+}
+.spine-info.has-selection {
+  border-color: var(--accent-amber);
+  background:
+    radial-gradient(ellipse 100% 60% at 100% 0%, rgba(224, 152, 46, 0.10), transparent 60%),
+    rgba(255, 255, 255, 0.03);
+}
+.spine-info .placeholder-eyebrow,
+.spine-info .info-eyebrow {
   font-family: "JetBrains Mono", monospace;
   font-size: 11px;
-  letter-spacing: 0.06em;
-  color: var(--text-secondary);
+  letter-spacing: 0.10em;
+  color: var(--accent-amber);
   text-transform: uppercase;
-  white-space: nowrap;
+  margin: 0 0 14px;
 }
-.spine-label::before {
-  content: ""; display: inline-block;
-  width: 28px; height: 1px;
-  background: var(--accent-amber);
-  vertical-align: middle;
-  margin-right: 10px;
+.spine-info h4 {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: clamp(24px, 2.4vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  color: var(--text-primary);
+  margin: 0 0 16px;
 }
-.spine-label.l-c2 { top: calc(14% + 2px);  left: calc(50% + 62px); }
-.spine-label.l-t6 { top: calc(41% + 2px);  right: calc(50% + 0px); }
-.spine-label.l-t6::before { display: none; }
-.spine-label.l-t6::after {
-  content: ""; display: inline-block;
-  width: 28px; height: 1px;
-  background: var(--accent-amber);
-  vertical-align: middle;
-  margin-left: 10px;
+.spine-info p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 18px;
 }
-.spine-label.l-l4 { top: calc(70% + 2px);  left: calc(50% + 66px); }
-
-.spine-caption {
+.spine-info .placeholder-hint {
+  margin-top: auto;
   font-family: "JetBrains Mono", monospace;
-  font-size: 12px;
+  font-size: 10px;
+  letter-spacing: 0.10em;
   color: var(--text-muted);
-  letter-spacing: 0.04em;
-  margin-top: 18px;
+  text-transform: uppercase;
+}
+.spine-info dl { margin: 0; padding: 0; }
+.spine-info .info-row {
+  padding: 18px 0;
+  border-top: 1px solid var(--border-subtle);
+}
+.spine-info .info-row:first-of-type { border-top: 1px solid var(--border-subtle); margin-top: 4px; }
+.spine-info .info-row dt {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+.spine-info .info-row dd {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-primary);
+  margin: 0;
+}
+.spine-info .info-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 24px;
+  font-family: "Inter Tight", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--accent-amber);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-amber);
+  padding-bottom: 2px;
+  align-self: flex-start;
+  transition: gap 200ms ease;
+}
+.spine-info .info-cta:hover { gap: 10px; }
+
+.spine-disclaimer {
+  margin: 48px auto 0;
+  max-width: 760px;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--text-muted);
+  text-align: center;
 }
 
 @keyframes breathe {
@@ -1425,6 +1534,11 @@ footer {
   .hero-fade, .hero-title .word, .portrait-img { opacity: 1; transform: none; }
 }
 </style>
+
+<!-- Three.js for the interactive 3D spine. Loaded async; gracefully degrades
+     to the static SVG fallback if WebGL is unsupported or the script fails. -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body data-theme="light">
 
@@ -1600,76 +1714,75 @@ footer {
 =====================================================-->
 <section class="spine" id="spine" aria-label="Interactive 3D Spine">
   <div class="wrap spine-inner">
-    <h2 class="reveal">Find what's hurting.</h2>
-    <h3 class="reveal">Then learn why.</h3>
-
-    <div class="spine-viz reveal" role="img" aria-label="Stylized spine illustration with markers at C2, T6, and L4">
-      <!-- Stylized spine SVG: 5 cervical sections, 12 thoracic, 5 lumbar -->
-      <svg class="spine-svg" viewBox="0 0 200 720" aria-hidden="true">
-        <!-- generated programmatically below for crispness; using static rects + ovals -->
-        <!-- Skull base -->
-        <ellipse cx="100" cy="22" rx="32" ry="22" />
-        <!-- Vertebrae stack: drawn as rounded rects with disc separators -->
-        <g>
-          <!-- Cervical C1-C7 (7) -->
-          <rect class="vert" x="80"  y="48"  width="40" height="22" rx="6"/>
-          <rect class="disc" x="80"  y="71"  width="40" height="6"  rx="3"/>
-          <rect class="vert" x="78"  y="78"  width="44" height="22" rx="6"/>
-          <rect class="disc" x="78"  y="101" width="44" height="6"  rx="3"/>
-          <rect class="vert" x="76"  y="108" width="48" height="22" rx="6"/>
-          <rect class="disc" x="76"  y="131" width="48" height="6"  rx="3"/>
-          <rect class="vert" x="74"  y="138" width="52" height="22" rx="6"/>
-          <rect class="disc" x="74"  y="161" width="52" height="6"  rx="3"/>
-          <rect class="vert" x="72"  y="168" width="56" height="22" rx="6"/>
-          <rect class="disc" x="72"  y="191" width="56" height="6"  rx="3"/>
-          <rect class="vert" x="70"  y="198" width="60" height="22" rx="6"/>
-          <rect class="disc" x="70"  y="221" width="60" height="6"  rx="3"/>
-          <rect class="vert" x="68"  y="228" width="64" height="22" rx="6"/>
-          <rect class="disc" x="68"  y="251" width="64" height="6"  rx="3"/>
-          <!-- Thoracic T1-T12 (12) -->
-          <rect class="vert" x="66"  y="258" width="68" height="24" rx="6"/>
-          <rect class="disc" x="66"  y="283" width="68" height="6"  rx="3"/>
-          <rect class="vert" x="64"  y="290" width="72" height="24" rx="6"/>
-          <rect class="disc" x="64"  y="315" width="72" height="6"  rx="3"/>
-          <rect class="vert" x="62"  y="322" width="76" height="24" rx="6"/>
-          <rect class="disc" x="62"  y="347" width="76" height="6"  rx="3"/>
-          <rect class="vert" x="60"  y="354" width="80" height="24" rx="6"/>
-          <rect class="disc" x="60"  y="379" width="80" height="6"  rx="3"/>
-          <rect class="vert" x="58"  y="386" width="84" height="24" rx="6"/>
-          <rect class="disc" x="58"  y="411" width="84" height="6"  rx="3"/>
-          <rect class="vert" x="58"  y="418" width="84" height="24" rx="6"/>
-          <rect class="disc" x="58"  y="443" width="84" height="6"  rx="3"/>
-          <rect class="vert" x="58"  y="450" width="84" height="24" rx="6"/>
-          <rect class="disc" x="58"  y="475" width="84" height="6"  rx="3"/>
-          <!-- Lumbar L1-L5 (5) -->
-          <rect class="vert" x="54"  y="482" width="92" height="28" rx="7"/>
-          <rect class="disc" x="54"  y="511" width="92" height="7"  rx="3"/>
-          <rect class="vert" x="52"  y="519" width="96" height="28" rx="7"/>
-          <rect class="disc" x="52"  y="548" width="96" height="7"  rx="3"/>
-          <rect class="vert" x="50"  y="556" width="100" height="28" rx="7"/>
-          <rect class="disc" x="50"  y="585" width="100" height="7"  rx="3"/>
-          <rect class="vert" x="48"  y="593" width="104" height="28" rx="7"/>
-          <rect class="disc" x="48"  y="622" width="104" height="7"  rx="3"/>
-          <rect class="vert" x="46"  y="630" width="108" height="28" rx="7"/>
-          <!-- Sacrum -->
-          <path d="M50 660 Q100 720 150 660 L150 668 Q100 720 50 668 Z"/>
-        </g>
-      </svg>
-
-      <!-- Glowing markers -->
-      <div class="spine-dot d-c2" aria-hidden="true"></div>
-      <div class="spine-dot d-t6" aria-hidden="true"></div>
-      <div class="spine-dot d-l4" aria-hidden="true"></div>
-
-      <div class="spine-label l-c2">Headaches</div>
-      <div class="spine-label l-t6">Mid-back tension</div>
-      <div class="spine-label l-l4">Lower back &amp; sciatica</div>
+    <div class="spine-head reveal">
+      <h2>Find what's hurting.</h2>
+      <h3>Then learn why.</h3>
     </div>
 
-    <div class="reveal">
-      <a href="#spine-experience" class="btn btn-amber btn-lg">Explore the Interactive Spine <span class="arrow" aria-hidden="true">→</span></a>
-      <div class="spine-caption">Rotate, zoom, and click any vertebra in the full interactive view.</div>
+    <div class="spine-stage reveal">
+      <div class="spine-canvas-wrap" id="spineCanvasWrap">
+        <canvas class="spine-canvas" id="spineCanvas" aria-label="Interactive 3D spine — drag to rotate, click a vertebra to learn more"></canvas>
+
+        <!-- Static SVG fallback (shown only when WebGL or Three.js are unavailable) -->
+        <svg class="spine-svg-fallback" viewBox="0 0 200 720" aria-hidden="true">
+          <ellipse cx="100" cy="22" rx="32" ry="22" />
+          <g>
+            <rect class="vert" x="80" y="48"  width="40" height="22" rx="6"/>
+            <rect class="vert" x="78" y="78"  width="44" height="22" rx="6"/>
+            <rect class="vert" x="76" y="108" width="48" height="22" rx="6"/>
+            <rect class="vert" x="74" y="138" width="52" height="22" rx="6"/>
+            <rect class="vert" x="72" y="168" width="56" height="22" rx="6"/>
+            <rect class="vert" x="70" y="198" width="60" height="22" rx="6"/>
+            <rect class="vert" x="68" y="228" width="64" height="22" rx="6"/>
+            <rect class="vert" x="66" y="258" width="68" height="24" rx="6"/>
+            <rect class="vert" x="64" y="290" width="72" height="24" rx="6"/>
+            <rect class="vert" x="62" y="322" width="76" height="24" rx="6"/>
+            <rect class="vert" x="60" y="354" width="80" height="24" rx="6"/>
+            <rect class="vert" x="58" y="386" width="84" height="24" rx="6"/>
+            <rect class="vert" x="58" y="418" width="84" height="24" rx="6"/>
+            <rect class="vert" x="58" y="450" width="84" height="24" rx="6"/>
+            <rect class="vert" x="54" y="482" width="92" height="28" rx="7"/>
+            <rect class="vert" x="52" y="519" width="96" height="28" rx="7"/>
+            <rect class="vert" x="50" y="556" width="100" height="28" rx="7"/>
+            <rect class="vert" x="48" y="593" width="104" height="28" rx="7"/>
+            <rect class="vert" x="46" y="630" width="108" height="28" rx="7"/>
+            <path d="M50 660 Q100 720 150 660 L150 668 Q100 720 50 668 Z"/>
+          </g>
+        </svg>
+
+        <div class="spine-hint" id="spineHint">Drag to rotate · Click a vertebra</div>
+        <div class="spine-controls">
+          <button type="button" class="spine-control-btn" data-action="auto" aria-pressed="true">Auto-spin</button>
+          <button type="button" class="spine-control-btn" data-action="reset">Reset</button>
+        </div>
+      </div>
+
+      <aside class="spine-info" id="spineInfo" aria-live="polite">
+        <div class="spine-info-placeholder" data-state="placeholder">
+          <div class="placeholder-eyebrow">Interactive anatomy</div>
+          <h4>Click a vertebra to see what it connects to.</h4>
+          <p>Each vertebra in the spine sits next to specific nerve pathways that branch out to muscles, organs, and tissues throughout the body. When alignment is off at one level, patients often notice symptoms in the body region that level serves.</p>
+          <div class="placeholder-hint">Try clicking C2, T6, or L4 to start.</div>
+        </div>
+        <div class="spine-info-detail" data-state="detail" hidden>
+          <div class="info-eyebrow" data-field="eyebrow">—</div>
+          <h4 data-field="name">—</h4>
+          <dl>
+            <div class="info-row">
+              <dt>Areas of the body this level connects to</dt>
+              <dd data-field="area">—</dd>
+            </div>
+            <div class="info-row">
+              <dt>Symptoms patients commonly describe</dt>
+              <dd data-field="symptoms">—</dd>
+            </div>
+          </dl>
+          <a href="#cond" class="info-cta">See conditions we treat <span aria-hidden="true">→</span></a>
+        </div>
+      </aside>
     </div>
+
+    <p class="spine-disclaimer reveal">Educational only. The spine-nerve connections shown are based on traditional chiropractic teaching and are not a diagnosis. If you have symptoms, see Dr. Herlehy for a proper evaluation. Emergencies: call 911.</p>
   </div>
 </section>
 
@@ -2024,6 +2137,424 @@ footer {
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 })();
+
+/* ============================================================
+   INTERACTIVE 3D SPINE — Three.js
+   Procedural spine (24 vertebrae + skull + sacrum). Drag to rotate,
+   click a vertebra to learn what nerve pathways at that level connect
+   to. Gracefully degrades to the SVG fallback if Three.js or WebGL
+   are unavailable. Auto-spins until the user interacts; respects
+   prefers-reduced-motion.
+   ============================================================ */
+function initInteractiveSpine() {
+  const wrap = document.getElementById('spineCanvasWrap');
+  const canvas = document.getElementById('spineCanvas');
+  const info = document.getElementById('spineInfo');
+  const hint = document.getElementById('spineHint');
+  if (!wrap || !canvas || !info) return;
+
+  const placeholder = info.querySelector('[data-state="placeholder"]');
+  const detail = info.querySelector('[data-state="detail"]');
+  const autoBtn = wrap.querySelector('[data-action="auto"]');
+  const resetBtn = wrap.querySelector('[data-action="reset"]');
+
+  function hasWebGL() {
+    try {
+      const c = document.createElement('canvas');
+      return !!(window.WebGLRenderingContext &&
+        (c.getContext('webgl') || c.getContext('experimental-webgl')));
+    } catch (e) { return false; }
+  }
+  if (!window.THREE || !hasWebGL()) {
+    wrap.classList.add('fallback');
+    return;
+  }
+
+  // Phrased carefully (educational, not diagnostic / cure claims). Mirrors
+  // traditional chiropractic neuro-segmental teaching; the disclaimer below
+  // the canvas makes the scope explicit.
+  const VERTEBRAE = [
+    { id:'C1', name:'C1 — Atlas', region:'Cervical · head & upper neck',
+      area:'Cranial blood flow, scalp, pituitary, sympathetic head nerves',
+      symptoms:'Headaches, sleep disruption, dizziness, neck stiffness' },
+    { id:'C2', name:'C2 — Axis', region:'Cervical · head & upper neck',
+      area:'Eyes, sinuses, ears, optic and auditory pathways',
+      symptoms:'Sinus pressure, tension headaches, jaw tension' },
+    { id:'C3', name:'C3', region:'Cervical · head & upper neck',
+      area:'Face, cheeks, outer ear, diaphragm',
+      symptoms:'Facial neuralgia, dizziness, neck pain' },
+    { id:'C4', name:'C4', region:'Cervical · head & upper neck',
+      area:'Mouth, nose, eustachian tubes',
+      symptoms:'Sinus issues, runny nose, hearing changes' },
+    { id:'C5', name:'C5', region:'Cervical · neck & shoulders',
+      area:'Vocal cords, neck glands, shoulders',
+      symptoms:'Sore throat, hoarseness, shoulder pain' },
+    { id:'C6', name:'C6', region:'Cervical · neck & shoulders',
+      area:'Neck muscles, shoulders, tonsils',
+      symptoms:'Stiff neck, upper-arm pain' },
+    { id:'C7', name:'C7', region:'Cervical · neck base',
+      area:'Thyroid, shoulders, elbows, some finger nerves',
+      symptoms:'Bursitis, finger numbness, thyroid sensations' },
+    { id:'T1', name:'T1', region:'Thoracic · upper back',
+      area:'Arms, hands, esophagus, trachea',
+      symptoms:'Arm pain, hand weakness, breathing tightness' },
+    { id:'T2', name:'T2', region:'Thoracic · upper back',
+      area:'Heart, pericardium (nerve pathway)',
+      symptoms:'Chest discomfort, irregular sensations' },
+    { id:'T3', name:'T3', region:'Thoracic · upper back',
+      area:'Lungs, bronchial tubes, chest, breasts',
+      symptoms:'Cough, congestion, chest tightness' },
+    { id:'T4', name:'T4', region:'Thoracic · mid back',
+      area:'Gallbladder, common bile duct',
+      symptoms:'Right-side back ache, shoulder-blade pain' },
+    { id:'T5', name:'T5', region:'Thoracic · mid back',
+      area:'Liver, solar plexus, circulation',
+      symptoms:'Fatigue, mid-back tension, low energy' },
+    { id:'T6', name:'T6', region:'Thoracic · mid back',
+      area:'Stomach',
+      symptoms:'Indigestion, heartburn, mid-back tension' },
+    { id:'T7', name:'T7', region:'Thoracic · mid back',
+      area:'Pancreas, duodenum',
+      symptoms:'Reflux, upper abdominal discomfort' },
+    { id:'T8', name:'T8', region:'Thoracic · lower back',
+      area:'Spleen, diaphragm',
+      symptoms:'Lowered immunity, hiccups, breathing pattern issues' },
+    { id:'T9', name:'T9', region:'Thoracic · lower back',
+      area:'Adrenal glands',
+      symptoms:'Allergies, hives, fatigue' },
+    { id:'T10', name:'T10', region:'Thoracic · lower back',
+      area:'Kidneys',
+      symptoms:'Kidney-area soreness, fluid balance issues' },
+    { id:'T11', name:'T11', region:'Thoracic · lower back',
+      area:'Kidneys, ureters',
+      symptoms:'Skin conditions, lower-back tension' },
+    { id:'T12', name:'T12', region:'Thoracic · lower back',
+      area:'Small intestines, lymph circulation',
+      symptoms:'Gas, bloating, lower-back stiffness' },
+    { id:'L1', name:'L1', region:'Lumbar · lower back',
+      area:'Large intestines, inguinal rings',
+      symptoms:'Constipation, colitis, hernias' },
+    { id:'L2', name:'L2', region:'Lumbar · lower back',
+      area:'Appendix, abdomen, upper leg',
+      symptoms:'Cramps, varicose veins, abdominal discomfort' },
+    { id:'L3', name:'L3', region:'Lumbar · lower back',
+      area:'Reproductive organs, bladder, knees',
+      symptoms:'Bladder issues, menstrual discomfort, knee pain' },
+    { id:'L4', name:'L4', region:'Lumbar · lower back',
+      area:'Prostate, low-back muscles, sciatic nerve',
+      symptoms:'Sciatica, lumbago, low-back pain' },
+    { id:'L5', name:'L5', region:'Lumbar · lower back',
+      area:'Lower legs, ankles, feet',
+      symptoms:'Leg cramps, swollen ankles, foot weakness' }
+  ];
+
+  const BONE_COLOR = 0xE6DDC8;
+  const DISC_COLOR = 0x6DB6F2;
+  const HOVER_GLOW = 0x6DB6F2;
+  const SELECT_GLOW = 0xE0982E;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+  camera.position.set(0, 0, 14);
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+  // Lighting — key from upper-right, fill of sky-blue from lower-left, warm rim from behind
+  scene.add(new THREE.AmbientLight(0xCCDDEE, 0.55));
+  const key = new THREE.DirectionalLight(0xFFFFFF, 0.95);
+  key.position.set(5, 6, 6); scene.add(key);
+  const fill = new THREE.DirectionalLight(0x6DB6F2, 0.4);
+  fill.position.set(-4, -2, 3); scene.add(fill);
+  const rim = new THREE.DirectionalLight(0xE0982E, 0.20);
+  rim.position.set(0, -3, -5); scene.add(rim);
+
+  // Build spine procedurally — stacks DOWNWARD so C1 sits on top, L5 at bottom
+  const spineGroup = new THREE.Group();
+  scene.add(spineGroup);
+
+  let cumY = 0;       // next vertebra's center-y (descends)
+  let topY = 0;       // top of the topmost vertebra body
+  let bottomY = 0;    // bottom of the bottommost vertebra body
+
+  VERTEBRAE.forEach((v, i) => {
+    const reg = v.id[0];
+    const num = parseInt(v.id.substring(1), 10);
+    const cIdx = num - 1; // 0..6 / 0..11 / 0..4
+    const size = reg === 'C' ? 0.38 + cIdx * 0.014
+               : reg === 'T' ? 0.52 + cIdx * 0.020
+               : 0.74 + cIdx * 0.014;
+    const height = reg === 'C' ? 0.32 : reg === 'T' ? 0.42 : 0.54;
+    const discH  = reg === 'C' ? 0.07 : reg === 'T' ? 0.09 : 0.12;
+
+    const vGroup = new THREE.Group();
+    vGroup.userData = { ...v, index: i };
+
+    // Vertebral body — slightly tapered cylinder
+    const bodyMat = new THREE.MeshStandardMaterial({
+      color: BONE_COLOR, roughness: 0.65, metalness: 0.04,
+      emissive: 0x000000, emissiveIntensity: 0
+    });
+    const body = new THREE.Mesh(
+      new THREE.CylinderGeometry(size, size * 0.94, height, 28),
+      bodyMat
+    );
+    body.userData.isVertebraPart = true;
+    vGroup.add(body);
+
+    // Spinous process — back protrusion (always points -Z in local space)
+    const sp = new THREE.Mesh(
+      new THREE.BoxGeometry(size * 0.42, height * 0.75, size * 1.15),
+      bodyMat.clone()
+    );
+    sp.position.set(0, 0, -size * 0.85);
+    sp.userData.isVertebraPart = true;
+    vGroup.add(sp);
+
+    // Transverse processes — left/right wings
+    const tpMat = bodyMat.clone();
+    const tpGeom = new THREE.BoxGeometry(size * 0.7, height * 0.55, size * 0.32);
+    const tpL = new THREE.Mesh(tpGeom, tpMat);
+    tpL.position.set(-size * 1.05, 0, 0);
+    tpL.userData.isVertebraPart = true;
+    vGroup.add(tpL);
+    const tpR = tpL.clone(); tpR.material = tpMat;
+    tpR.position.set(size * 1.05, 0, 0);
+    tpR.userData.isVertebraPart = true;
+    vGroup.add(tpR);
+
+    // Disc ABOVE this vertebra (skip C1 — nothing above it inside the column)
+    if (i > 0) {
+      const disc = new THREE.Mesh(
+        new THREE.CylinderGeometry(size * 1.04, size * 1.04, discH, 28),
+        new THREE.MeshStandardMaterial({
+          color: DISC_COLOR, transparent: true, opacity: 0.55,
+          roughness: 0.4, emissive: 0x1B4A6B, emissiveIntensity: 0.30
+        })
+      );
+      disc.position.y = (height / 2 + discH / 2); // above the body
+      vGroup.add(disc);
+    }
+
+    // Subtle S-curve in Z (cervical lordosis forward, thoracic kyphosis back, lumbar lordosis forward)
+    const tIdx = num - 1;
+    let zOff = 0;
+    if (reg === 'C')      zOff = -0.35 + (tIdx / 6)  *  0.55;
+    else if (reg === 'T') zOff =  0.20 - (tIdx / 11) *  0.70;
+    else                  zOff = -0.50 + (tIdx / 4)  *  0.40;
+
+    vGroup.position.y = cumY;
+    vGroup.position.z = zOff;
+
+    if (i === 0) topY = cumY + height / 2;
+    bottomY = cumY - height / 2;
+    cumY -= (height + discH);
+
+    spineGroup.add(vGroup);
+  });
+
+  // Center vertically: midpoint of spine should sit at world Y = 0
+  const midY = (topY + bottomY) / 2;
+  spineGroup.position.y = -midY;
+
+  // Skull base — small dome above C1
+  const skull = new THREE.Mesh(
+    new THREE.SphereGeometry(0.95, 32, 24),
+    new THREE.MeshStandardMaterial({ color: BONE_COLOR, roughness: 0.72 })
+  );
+  skull.position.set(0, topY + 0.75, -0.30);
+  skull.scale.set(1.15, 0.85, 1.05);
+  spineGroup.add(skull);
+
+  // Sacrum — triangular block below L5 (cone pointing down)
+  const sacrum = new THREE.Mesh(
+    new THREE.ConeGeometry(1.0, 1.4, 16),
+    new THREE.MeshStandardMaterial({ color: BONE_COLOR, roughness: 0.65 })
+  );
+  sacrum.position.set(0, bottomY - 0.75, -0.45);
+  sacrum.rotation.x = Math.PI;
+  spineGroup.add(sacrum);
+
+  const totalH = topY - bottomY + 2.5; // for camera fit (incl. skull + sacrum)
+
+  // ---- Sizing / resize observer ----
+  function resize() {
+    const r = wrap.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) return;
+    renderer.setSize(r.width, r.height, false);
+    camera.aspect = r.width / r.height;
+    // Fit the full spine height (incl. skull + sacrum) into the canvas
+    const fovY = camera.fov * Math.PI / 180;
+    camera.position.z = (totalH / 2) / Math.tan(fovY / 2) * 1.05;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(wrap);
+  else window.addEventListener('resize', resize);
+
+  // ---- Interaction state ----
+  let isDragging = false;
+  let dragDistance = 0;
+  let lastX = 0, lastY = 0;
+  let rotY = -0.35, rotX = 0.05;
+  let targetRotY = rotY, targetRotX = rotX;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let autoSpin = !reducedMotion;
+  let userTouched = false;
+  let selected = null;
+  let hovered = null;
+
+  autoBtn.setAttribute('aria-pressed', String(autoSpin));
+
+  // ---- Raycasting ----
+  const raycaster = new THREE.Raycaster();
+  const ndc = new THREE.Vector2();
+
+  function getVertebraAt(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    ndc.set(
+      ((clientX - rect.left) / rect.width) * 2 - 1,
+      -((clientY - rect.top) / rect.height) * 2 + 1
+    );
+    raycaster.setFromCamera(ndc, camera);
+    const hits = raycaster.intersectObjects(spineGroup.children, true);
+    for (const h of hits) {
+      let o = h.object;
+      while (o && !o.userData.id) o = o.parent;
+      if (o && o.userData.id) return o;
+    }
+    return null;
+  }
+
+  // Apply a tone (color + emissive) to a vertebra so it's clearly distinct
+  // from its neighbors. Restoring to bone tone happens by passing toneColor=null.
+  function applyTone(group, toneColor, baseEmissive, emissiveIntensity) {
+    group.traverse(child => {
+      if (child.isMesh && child.material && child.material.emissive && child.userData.isVertebraPart) {
+        if (!child.userData.baseColorHex) child.userData.baseColorHex = child.material.color.getHex();
+        if (toneColor === null) {
+          child.material.color.setHex(child.userData.baseColorHex);
+          child.material.emissive.setHex(0x000000);
+          child.material.emissiveIntensity = 0;
+        } else {
+          child.material.color.setHex(toneColor);
+          child.material.emissive.setHex(baseEmissive);
+          child.material.emissiveIntensity = emissiveIntensity;
+        }
+      }
+    });
+  }
+  function setScale(group, s) { group.scale.set(s, s, s); }
+
+  function setHover(g) {
+    if (hovered === g) return;
+    if (hovered && hovered !== selected) { applyTone(hovered, null); setScale(hovered, 1); }
+    hovered = g;
+    if (hovered && hovered !== selected) { applyTone(hovered, 0x9CC8E6, HOVER_GLOW, 0.3); setScale(hovered, 1.08); }
+  }
+
+  function selectVertebra(g) {
+    if (selected && selected !== g) { applyTone(selected, null); setScale(selected, 1); }
+    selected = g;
+    applyTone(g, 0xE0982E, SELECT_GLOW, 0.5);
+    setScale(g, 1.22);
+    const d = g.userData;
+    detail.querySelector('[data-field="eyebrow"]').textContent = d.region;
+    detail.querySelector('[data-field="name"]').textContent = d.name;
+    detail.querySelector('[data-field="area"]').textContent = d.area;
+    detail.querySelector('[data-field="symptoms"]').textContent = d.symptoms;
+    placeholder.hidden = true;
+    detail.hidden = false;
+    info.classList.add('has-selection');
+  }
+
+  function clearSelection() {
+    if (selected) { applyTone(selected, null); setScale(selected, 1); }
+    selected = null;
+    placeholder.hidden = false;
+    detail.hidden = true;
+    info.classList.remove('has-selection');
+  }
+
+  // ---- Pointer handlers ----
+  canvas.addEventListener('pointerdown', (e) => {
+    isDragging = true;
+    dragDistance = 0;
+    lastX = e.clientX; lastY = e.clientY;
+    wrap.classList.add('is-dragging');
+    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+    userTouched = true;
+    wrap.classList.add('has-touched');
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if (isDragging) {
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      dragDistance += Math.hypot(dx, dy);
+      lastX = e.clientX; lastY = e.clientY;
+      targetRotY += dx * 0.0095;
+      targetRotX = Math.max(-0.85, Math.min(0.85, targetRotX + dy * 0.0075));
+    } else {
+      const g = getVertebraAt(e.clientX, e.clientY);
+      setHover(g);
+      canvas.style.cursor = g ? 'pointer' : 'grab';
+    }
+  });
+  canvas.addEventListener('pointerup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    wrap.classList.remove('is-dragging');
+    try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+    if (dragDistance < 6) {
+      const g = getVertebraAt(e.clientX, e.clientY);
+      if (g) selectVertebra(g);
+    }
+  });
+  canvas.addEventListener('pointerleave', () => setHover(null));
+
+  // Keyboard: arrow keys nudge rotation; enter selects nearest
+  canvas.tabIndex = 0;
+  canvas.addEventListener('keydown', (e) => {
+    const step = 0.15;
+    if (e.key === 'ArrowLeft')  { targetRotY -= step; userTouched = true; e.preventDefault(); }
+    if (e.key === 'ArrowRight') { targetRotY += step; userTouched = true; e.preventDefault(); }
+    if (e.key === 'ArrowUp')    { targetRotX = Math.max(-0.85, targetRotX - step); e.preventDefault(); }
+    if (e.key === 'ArrowDown')  { targetRotX = Math.min( 0.85, targetRotX + step); e.preventDefault(); }
+  });
+
+  // ---- Controls ----
+  autoBtn.addEventListener('click', () => {
+    autoSpin = !autoSpin;
+    autoBtn.setAttribute('aria-pressed', String(autoSpin));
+  });
+  resetBtn.addEventListener('click', () => {
+    targetRotY = -0.35;
+    targetRotX = 0.05;
+    clearSelection();
+    autoSpin = !reducedMotion;
+    autoBtn.setAttribute('aria-pressed', String(autoSpin));
+  });
+
+  // ---- Render loop ----
+  function animate() {
+    requestAnimationFrame(animate);
+    if (autoSpin && !isDragging && !selected) targetRotY += reducedMotion ? 0 : 0.0028;
+    rotY += (targetRotY - rotY) * (reducedMotion ? 1 : 0.08);
+    rotX += (targetRotX - rotX) * (reducedMotion ? 1 : 0.08);
+    spineGroup.rotation.y = rotY;
+    spineGroup.rotation.x = 0.10 + rotX;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // Debug hook (safe to keep in production; not used by anything else)
+  window.__spine = { spineGroup, scene, camera, renderer, getSelected: () => selected, selectVertebra };
+}
+// Three.js loads via <script defer> in <head> — it executes after the parser
+// finishes the body, but inline scripts in the body run during parsing. So we
+// MUST wait for the load event to guarantee window.THREE is defined.
+if (document.readyState === 'complete') initInteractiveSpine();
+else window.addEventListener('load', initInteractiveSpine);
 
 /* ============================================================
    SPINNEY LAUNCHER — reveal on first scroll or after 5s
