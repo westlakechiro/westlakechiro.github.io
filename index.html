@@ -1146,29 +1146,27 @@ footer {
    ============================================================ */
 .spinney-launcher {
   position: fixed;
-  right: 32px; bottom: 32px;
+  right: 24px; bottom: 24px;
   z-index: 90;
   display: inline-flex; align-items: center;
+  /* Always-pill layout — circle + label is the resting state, no hover required.
+     People need to know it's clickable; a wordless bubble doesn't earn the click. */
   height: 144px;
+  padding: 0 28px 0 0;
   background: var(--bg-secondary);
   border: 2px solid var(--border-subtle);
   border-radius: 999px;
-  padding: 0;
-  width: 144px;
-  overflow: visible;
   cursor: pointer;
-  box-shadow: 0 0 0 1px var(--border-subtle), 0 12px 36px rgba(11,26,43,0.32),
-              0 0 24px var(--accent-amber-soft);
-  /* Hidden until revealed by scroll or 5s timer (see JS at bottom of file) */
+  box-shadow: 0 0 0 1px var(--border-subtle), 0 14px 36px rgba(11,26,43,0.28),
+              0 0 28px var(--accent-amber-soft);
+  /* Hidden until revealed by scroll or 5s timer (see JS at bottom of file). */
   opacity: 0;
-  transform: translateY(24px) scale(0.85);
+  transform: translateY(24px) scale(0.92);
   pointer-events: none;
-  transition: width 320ms cubic-bezier(.2,.7,.2,1),
-              border-color 240ms ease,
+  transition: border-color 240ms ease,
               box-shadow 320ms ease,
-              padding-right 320ms ease,
-              opacity 480ms ease,
-              transform 540ms cubic-bezier(.2,.7,.2,1);
+              opacity 520ms ease,
+              transform 580ms cubic-bezier(.2,.7,.2,1);
 }
 .spinney-launcher.is-revealed {
   opacity: 1;
@@ -1181,9 +1179,7 @@ footer {
 }
 .spinney-launcher:hover,
 .spinney-launcher:focus-visible {
-  width: 380px;
   border-color: var(--accent-amber);
-  padding-right: 32px;
   box-shadow: 0 0 0 1px var(--accent-amber-soft), 0 20px 48px rgba(11,26,43,0.32),
               0 0 40px rgba(46,139,192,0.45);
 }
@@ -1191,42 +1187,40 @@ footer {
   position: relative;
   flex: 0 0 144px;
   width: 144px; height: 144px;
-  display: flex; align-items: flex-end; justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(109, 182, 242, 0.25), transparent 65%),
+    var(--bg-tertiary);
+  animation: breathe 4s ease-in-out infinite;
 }
 .spinney-launcher .avatar img {
-  position: absolute;
-  height: 176px; width: auto;
-  bottom: -8px; left: 50%;
-  transform: translateX(-50%);
-  animation: breathe 4s ease-in-out infinite;
-  filter: drop-shadow(0 8px 16px rgba(11,26,43,0.35));
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  /* contain Spinney inside the circle; show his face/upper body */
+  object-fit: cover;
+  object-position: 50% 22%;
+  filter: drop-shadow(0 6px 12px rgba(11,26,43,0.25));
 }
 .spinney-launcher .lbl {
-  flex: 1;
   margin-left: 18px;
-  margin-right: 12px;
   font-family: "Fraunces", serif;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 22px;
+  line-height: 1.05;
   color: var(--text-primary);
   white-space: nowrap;
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: opacity 220ms ease 80ms, transform 280ms ease 80ms;
   pointer-events: none;
 }
-.spinney-launcher:hover .lbl,
-.spinney-launcher:focus-visible .lbl,
-.spinney-launcher.open .lbl { opacity: 1; transform: translateX(0); }
 .spinney-launcher .lbl .small {
   display: block;
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
   font-size: 11px;
   color: var(--text-muted);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 /* Spinney chat modal */
@@ -1327,16 +1321,16 @@ footer {
 @media (max-width: 768px) {
   .mobile-book { display: flex; }
   body { padding-bottom: 80px; }
-  /* Scale Spinney back down on phones so he doesn't dominate the screen. */
+  /* Scale Spinney back down on phones so he doesn't dominate the screen, but
+     keep the label visible — a wordless bubble doesn't tell people to click. */
   .spinney-launcher {
-    right: 16px; bottom: 96px;
-    width: 88px; height: 88px;
+    right: 12px; bottom: 96px;
+    height: 80px;
+    padding: 0 18px 0 0;
   }
-  .spinney-launcher:hover,
-  .spinney-launcher:focus-visible { width: 88px; padding-right: 0; }
-  .spinney-launcher .avatar { flex-basis: 88px; width: 88px; height: 88px; }
-  .spinney-launcher .avatar img { height: 108px; bottom: -6px; }
-  .spinney-launcher .lbl { display: none; }
+  .spinney-launcher .avatar { flex: 0 0 80px; width: 80px; height: 80px; }
+  .spinney-launcher .lbl { margin-left: 12px; font-size: 15px; }
+  .spinney-launcher .lbl .small { font-size: 9px; margin-top: 3px; }
   .chat-modal { bottom: 196px; }
 }
 
