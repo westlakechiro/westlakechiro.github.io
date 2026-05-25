@@ -1146,53 +1146,68 @@ footer {
    ============================================================ */
 .spinney-launcher {
   position: fixed;
-  right: 24px; bottom: 24px;
+  right: 32px; bottom: 32px;
   z-index: 90;
   display: inline-flex; align-items: center;
-  height: 72px;
+  height: 144px;
   background: var(--bg-secondary);
   border: 2px solid var(--border-subtle);
   border-radius: 999px;
   padding: 0;
-  width: 72px;
+  width: 144px;
   overflow: visible;
   cursor: pointer;
-  box-shadow: 0 0 0 1px var(--border-subtle), 0 8px 24px rgba(0,0,0,0.4),
-              0 0 16px var(--accent-amber-soft);
+  box-shadow: 0 0 0 1px var(--border-subtle), 0 12px 36px rgba(11,26,43,0.32),
+              0 0 24px var(--accent-amber-soft);
+  /* Hidden until revealed by scroll or 5s timer (see JS at bottom of file) */
+  opacity: 0;
+  transform: translateY(24px) scale(0.85);
+  pointer-events: none;
   transition: width 320ms cubic-bezier(.2,.7,.2,1),
               border-color 240ms ease,
               box-shadow 320ms ease,
-              padding-right 320ms ease;
+              padding-right 320ms ease,
+              opacity 480ms ease,
+              transform 540ms cubic-bezier(.2,.7,.2,1);
+}
+.spinney-launcher.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinney-launcher { transition: opacity 200ms ease; transform: none; }
+  .spinney-launcher.is-revealed { transform: none; }
 }
 .spinney-launcher:hover,
 .spinney-launcher:focus-visible {
-  width: 240px;
+  width: 380px;
   border-color: var(--accent-amber);
-  padding-right: 24px;
-  box-shadow: 0 0 0 1px var(--accent-amber-soft), 0 14px 32px rgba(11,26,43,0.28),
-              0 0 28px rgba(46,139,192,0.45);
+  padding-right: 32px;
+  box-shadow: 0 0 0 1px var(--accent-amber-soft), 0 20px 48px rgba(11,26,43,0.32),
+              0 0 40px rgba(46,139,192,0.45);
 }
 .spinney-launcher .avatar {
   position: relative;
-  flex: 0 0 72px;
-  width: 72px; height: 72px;
+  flex: 0 0 144px;
+  width: 144px; height: 144px;
   display: flex; align-items: flex-end; justify-content: center;
 }
 .spinney-launcher .avatar img {
   position: absolute;
-  height: 88px; width: auto;
-  bottom: -4px; left: 50%;
+  height: 176px; width: auto;
+  bottom: -8px; left: 50%;
   transform: translateX(-50%);
   animation: breathe 4s ease-in-out infinite;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 8px 16px rgba(11,26,43,0.35));
 }
 .spinney-launcher .lbl {
   flex: 1;
-  margin-left: 12px;
-  margin-right: 8px;
+  margin-left: 18px;
+  margin-right: 12px;
   font-family: "Fraunces", serif;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 20px;
   color: var(--text-primary);
   white-space: nowrap;
   opacity: 0;
@@ -1207,11 +1222,11 @@ footer {
   display: block;
   font-family: "JetBrains Mono", monospace;
   font-weight: 400;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-muted);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 /* Spinney chat modal */
@@ -1312,8 +1327,17 @@ footer {
 @media (max-width: 768px) {
   .mobile-book { display: flex; }
   body { padding-bottom: 80px; }
-  .spinney-launcher { bottom: 88px; }
-  .chat-modal { bottom: 170px; }
+  /* Scale Spinney back down on phones so he doesn't dominate the screen. */
+  .spinney-launcher {
+    right: 16px; bottom: 96px;
+    width: 88px; height: 88px;
+  }
+  .spinney-launcher:hover,
+  .spinney-launcher:focus-visible { width: 88px; padding-right: 0; }
+  .spinney-launcher .avatar { flex-basis: 88px; width: 88px; height: 88px; }
+  .spinney-launcher .avatar img { height: 108px; bottom: -6px; }
+  .spinney-launcher .lbl { display: none; }
+  .chat-modal { bottom: 196px; }
 }
 
 /* ============================================================
@@ -2005,6 +2029,26 @@ footer {
     });
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+})();
+
+/* ============================================================
+   SPINNEY LAUNCHER — reveal on first scroll or after 5s
+   ============================================================ */
+(function () {
+  const btn = document.getElementById('spinneyLauncher');
+  if (!btn) return;
+  let revealed = false;
+  function reveal() {
+    if (revealed) return;
+    revealed = true;
+    btn.classList.add('is-revealed');
+    window.removeEventListener('scroll', reveal);
+    clearTimeout(timer);
+  }
+  // If JS loads after the user has already scrolled, show immediately.
+  if (window.scrollY > 0) { reveal(); return; }
+  const timer = setTimeout(reveal, 5000);
+  window.addEventListener('scroll', reveal, { passive: true });
 })();
 
 /* ============================================================
