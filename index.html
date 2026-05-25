@@ -1125,6 +1125,36 @@ button { font: inherit; cursor: pointer; }
 .hours .day  { display: inline-block; width: 110px; color: var(--text-primary); }
 .hours .closed { color: var(--text-muted); }
 
+.loc-amenities {
+  list-style: none;
+  margin: 28px 0 28px;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--border-subtle);
+  display: flex; flex-direction: column;
+  gap: 16px;
+}
+.loc-amenities li {
+  display: flex; align-items: flex-start; gap: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+.loc-amenities li strong {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+.loc-amenities .muted {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.loc-amenities svg {
+  flex: 0 0 28px;
+  width: 28px; height: 28px;
+  color: var(--accent-amber);
+  margin-top: 2px;
+}
+
 .loc-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
 
 /* Real embedded Google Map */
@@ -1965,6 +1995,24 @@ footer {
           <div><span class="day">Saturday</span>  <span class="closed">By appointment</span></div>
           <div><span class="day">Sunday</span>    <span class="closed">Closed</span></div>
         </div>
+
+        <ul class="loc-amenities" aria-label="In the office">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 11c0-1.7 1.3-3 3-3h8c1.7 0 3 1.3 3 3v3H5v-3z"/>
+              <path d="M5 14v4M19 14v4M7 18h10"/>
+              <path d="M9 8V6c0-1 1-2 2-2h2c1 0 2 1 2 2v2"/>
+            </svg>
+            <span><strong>Two full-body massage-chair rooms</strong><br><span class="muted">For relaxation before or after your adjustment.</span></span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 5c0-1 1-2 2-2h2c1 0 2 1 2 2v6l4 4v3a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5z"/>
+              <path d="M6 12h6"/>
+            </svg>
+            <span><strong>Custom orthotics</strong><br><span class="muted">Fitted on-site to support posture and gait.</span></span>
+          </li>
+        </ul>
 
         <div class="loc-ctas">
           <a href="tel:+15407210044" class="btn btn-amber btn-lg">Call Now</a>
