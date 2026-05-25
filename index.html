@@ -14,53 +14,64 @@
 <style>
 /* ============================================================
    WESTLAKE CHIROPRACTIC — DESIGN TOKENS
-   Editorial dark with lake glow. Charcoal / Ivory / Warm Amber.
+   Lakeside light with blue glow. Royal blue + sky blue + ivory-white
+   + soft grays, with a warm amber "spark" reserved ONLY for primary
+   call-to-action buttons (Book / Call). Light-first by default;
+   deep-navy dark mode via the toggle.
    Tokens live as CSS custom properties so the same system
    scales across the 38-page site.
    ============================================================ */
 
-:root, [data-theme="dark"] {
-  --bg-primary:        #0E0F12;
-  --bg-secondary:      #16181D;
-  --bg-tertiary:       #1E2128;
-  --bg-deepest:        #08090B;
-  --text-primary:      #F5F1EA;
-  --text-secondary:    #A8A29E;
-  --text-muted:        #6B6862;
-  --accent-amber:      #E8A95A;
-  --accent-amber-hover:#F0BC78;
-  --accent-amber-soft: rgba(232, 169, 90, 0.14);
-  --accent-teal:       #4A9B8E;
-  --accent-teal-hover: #5BAFA2;
-  --border-subtle:     rgba(245, 241, 234, 0.08);
-  --border-medium:     rgba(245, 241, 234, 0.16);
-  --shadow-glow:       0 0 32px rgba(232, 169, 90, 0.18);
+:root, [data-theme="light"] {
+  --bg-primary:        #F3F8FD;
+  --bg-secondary:      #E8F1FB;
+  --bg-tertiary:       #D8E8F7;
+  --bg-deepest:        #CBDFF4;
+  --text-primary:      #0F2942;
+  --text-secondary:    #2E4A63;
+  --text-muted:        #4C6982;
+  --accent-amber:      #1E5FCB;
+  --accent-amber-hover:#1A52AE;
+  --accent-amber-soft: rgba(30, 95, 203, 0.14);
+  --accent-teal:       #2E8BC0;
+  --accent-teal-hover: #2477A6;
+  --accent-spark:      #E0982E;
+  --accent-spark-hover:#F0AE48;
+  --accent-spark-soft: rgba(224, 152, 46, 0.18);
+  --border-subtle:     rgba(15, 41, 66, 0.10);
+  --border-medium:     rgba(15, 41, 66, 0.18);
+  --shadow-glow:       0 0 32px rgba(30, 95, 203, 0.18);
+  --shadow-spark:      0 0 32px rgba(224, 152, 46, 0.28);
   --portrait-bg:       radial-gradient(ellipse 70% 90% at 30% 25%,
-                          rgba(232, 169, 90, 0.32) 0%,
-                          rgba(232, 169, 90, 0.08) 40%,
-                          rgba(232, 169, 90, 0.00) 70%);
+                          rgba(46, 139, 192, 0.30) 0%,
+                          rgba(46, 139, 192, 0.08) 40%,
+                          rgba(46, 139, 192, 0.00) 70%);
 }
 
-[data-theme="light"] {
-  --bg-primary:        #FAF7F1;
-  --bg-secondary:      #F2EDE3;
-  --bg-tertiary:       #E8E1D2;
-  --bg-deepest:        #EDE6D6;
-  --text-primary:      #1A1B1F;
-  --text-secondary:    #4A4744;
-  --text-muted:        #807A72;
-  --accent-amber:      #C68A3F;
-  --accent-amber-hover:#B07526;
-  --accent-amber-soft: rgba(198, 138, 63, 0.16);
-  --accent-teal:       #357268;
-  --accent-teal-hover: #275A52;
-  --border-subtle:     rgba(26, 27, 31, 0.08);
-  --border-medium:     rgba(26, 27, 31, 0.16);
-  --shadow-glow:       0 0 32px rgba(198, 138, 63, 0.22);
+[data-theme="dark"] {
+  --bg-primary:        #0B1A2B;
+  --bg-secondary:      #112538;
+  --bg-tertiary:       #173248;
+  --bg-deepest:        #07121F;
+  --text-primary:      #EAF2FB;
+  --text-secondary:    #A7BACE;
+  --text-muted:        #7790A6;
+  --accent-amber:      #4D93E8;
+  --accent-amber-hover:#6BA8F0;
+  --accent-amber-soft: rgba(77, 147, 232, 0.16);
+  --accent-teal:       #57B6E0;
+  --accent-teal-hover: #6FC4E8;
+  --accent-spark:      #E8A95A;
+  --accent-spark-hover:#F0BC78;
+  --accent-spark-soft: rgba(232, 169, 90, 0.16);
+  --border-subtle:     rgba(234, 242, 251, 0.09);
+  --border-medium:     rgba(234, 242, 251, 0.18);
+  --shadow-glow:       0 0 32px rgba(77, 147, 232, 0.22);
+  --shadow-spark:      0 0 32px rgba(232, 169, 90, 0.20);
   --portrait-bg:       radial-gradient(ellipse 70% 90% at 30% 25%,
-                          rgba(198, 138, 63, 0.36) 0%,
-                          rgba(198, 138, 63, 0.10) 40%,
-                          rgba(198, 138, 63, 0.00) 70%);
+                          rgba(77, 147, 232, 0.30) 0%,
+                          rgba(77, 147, 232, 0.08) 40%,
+                          rgba(77, 147, 232, 0.00) 70%);
 }
 
 /* ----- Reset / base ----- */
@@ -225,12 +236,12 @@ button { font: inherit; cursor: pointer; }
   white-space: nowrap;
 }
 .btn-amber {
-  background: var(--accent-amber);
-  color: #0E0F12;
+  background: var(--accent-spark);
+  color: #11243A;
 }
 .btn-amber:hover {
-  background: var(--accent-amber-hover);
-  box-shadow: 0 0 0 4px var(--accent-amber-soft), var(--shadow-glow);
+  background: var(--accent-spark-hover);
+  box-shadow: 0 0 0 4px var(--accent-spark-soft), var(--shadow-spark);
   transform: translateY(-1px);
 }
 .btn-ghost {
@@ -336,9 +347,9 @@ button { font: inherit; cursor: pointer; }
   width: 240px; height: 240px;
   border-radius: 50%;
   background: radial-gradient(circle,
-    rgba(232, 169, 90, 0.45) 0%,
-    rgba(232, 169, 90, 0.12) 40%,
-    rgba(232, 169, 90, 0) 70%);
+    rgba(46, 139, 192, 0.45) 0%,
+    rgba(46, 139, 192, 0.12) 40%,
+    rgba(46, 139, 192, 0) 70%);
   filter: blur(20px);
   z-index: 0;
   pointer-events: none;
@@ -557,8 +568,8 @@ button { font: inherit; cursor: pointer; }
   content: "";
   position: absolute; inset: 0;
   background: radial-gradient(ellipse 60% 50% at 50% 50%,
-    rgba(232, 169, 90, 0.14) 0%,
-    rgba(232, 169, 90, 0.03) 35%,
+    rgba(46, 139, 192, 0.14) 0%,
+    rgba(46, 139, 192, 0.03) 35%,
     transparent 65%);
   pointer-events: none;
 }
@@ -608,12 +619,12 @@ button { font: inherit; cursor: pointer; }
   width: 14px; height: 14px;
   border-radius: 50%;
   background: var(--accent-amber);
-  box-shadow: 0 0 0 4px var(--accent-amber-soft), 0 0 24px rgba(232,169,90,0.6);
+  box-shadow: 0 0 0 4px var(--accent-amber-soft), 0 0 24px rgba(46,139,192,0.6);
   animation: pulse 3s ease-in-out infinite;
 }
 @keyframes pulse {
-  0%,100% { transform: scale(1);   box-shadow: 0 0 0 4px var(--accent-amber-soft), 0 0 24px rgba(232,169,90,0.5); }
-  50%     { transform: scale(1.18); box-shadow: 0 0 0 8px var(--accent-amber-soft), 0 0 36px rgba(232,169,90,0.85); }
+  0%,100% { transform: scale(1);   box-shadow: 0 0 0 4px var(--accent-amber-soft), 0 0 24px rgba(46,139,192,0.5); }
+  50%     { transform: scale(1.18); box-shadow: 0 0 0 8px var(--accent-amber-soft), 0 0 36px rgba(46,139,192,0.85); }
 }
 .spine-dot.d-c2 { top: 14%;  left: calc(50% + 38px); }
 .spine-dot.d-c2 { animation-delay: 0s; }
@@ -926,7 +937,7 @@ button { font: inherit; cursor: pointer; }
   width: 16px; height: 16px;
   background: var(--accent-amber);
   border-radius: 50%;
-  box-shadow: 0 0 0 6px var(--accent-amber-soft), 0 0 24px rgba(232,169,90,0.7);
+  box-shadow: 0 0 0 6px var(--accent-amber-soft), 0 0 24px rgba(46,139,192,0.7);
   animation: pulse 3s ease-in-out infinite;
 }
 .map .map-label {
@@ -1061,8 +1072,8 @@ footer {
   width: 240px;
   border-color: var(--accent-amber);
   padding-right: 24px;
-  box-shadow: 0 0 0 1px var(--accent-amber-soft), 0 14px 32px rgba(0,0,0,0.5),
-              0 0 28px rgba(232,169,90,0.45);
+  box-shadow: 0 0 0 1px var(--accent-amber-soft), 0 14px 32px rgba(11,26,43,0.28),
+              0 0 28px rgba(46,139,192,0.45);
 }
 .spinney-launcher .avatar {
   position: relative;
@@ -1300,7 +1311,7 @@ footer {
 }
 </style>
 </head>
-<body data-theme="dark">
+<body data-theme="light">
 
 <a href="#main" class="skip-link">Skip to main content</a>
 
@@ -1694,23 +1705,23 @@ footer {
             <!-- subtle grid -->
             <defs>
               <pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M40 0H0V40" fill="none" stroke="rgba(245,241,234,0.04)" stroke-width="1"/>
+                <path d="M40 0H0V40" fill="none" stroke="rgba(46,139,192,0.10)" stroke-width="1"/>
               </pattern>
             </defs>
             <rect width="600" height="460" fill="url(#g)"/>
             <!-- Lake -->
             <path d="M-20 380 Q60 260 180 320 Q260 360 320 320 Q420 240 520 320 Q580 360 620 320 L620 480 L-20 480 Z"
-                  fill="rgba(74,155,142,0.18)" stroke="rgba(74,155,142,0.4)" stroke-width="1"/>
+                  fill="rgba(46,139,192,0.22)" stroke="rgba(46,139,192,0.45)" stroke-width="1"/>
             <path d="M-20 380 Q60 260 180 320 Q260 360 320 320 Q420 240 520 320 Q580 360 620 320"
-                  fill="none" stroke="rgba(74,155,142,0.55)" stroke-width="1.2" stroke-dasharray="3 6"/>
+                  fill="none" stroke="rgba(46,139,192,0.55)" stroke-width="1.2" stroke-dasharray="3 6"/>
             <!-- Roads -->
-            <path d="M0 200 L600 220" stroke="rgba(245,241,234,0.18)" stroke-width="3" fill="none"/>
-            <path d="M180 0 L260 460" stroke="rgba(245,241,234,0.12)" stroke-width="2" fill="none"/>
-            <path d="M400 0 L360 460" stroke="rgba(245,241,234,0.10)" stroke-width="1.5" fill="none"/>
-            <path d="M0 90  L600 110" stroke="rgba(245,241,234,0.08)" stroke-width="1.5" fill="none"/>
+            <path d="M0 200 L600 220" stroke="rgba(46,139,192,0.28)" stroke-width="3" fill="none"/>
+            <path d="M180 0 L260 460" stroke="rgba(46,139,192,0.20)" stroke-width="2" fill="none"/>
+            <path d="M400 0 L360 460" stroke="rgba(46,139,192,0.16)" stroke-width="1.5" fill="none"/>
+            <path d="M0 90  L600 110" stroke="rgba(46,139,192,0.14)" stroke-width="1.5" fill="none"/>
             <!-- Route 122 highlight -->
-            <path d="M0 210 L600 230" stroke="rgba(232,169,90,0.32)" stroke-width="4" fill="none"/>
-            <text x="20" y="206" fill="rgba(232,169,90,0.85)" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">ROUTE 122</text>
+            <path d="M0 210 L600 230" stroke="rgba(30,95,203,0.55)" stroke-width="4" fill="none"/>
+            <text x="20" y="206" fill="rgba(30,95,203,0.95)" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">ROUTE 122</text>
           </svg>
           <div class="pin" aria-hidden="true"></div>
           <div class="map-label pin-lbl">Westlake Chiropractic</div>
