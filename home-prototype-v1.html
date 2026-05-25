@@ -1,0 +1,1949 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Westlake Chiropractic — Smith Mountain Lake, Virginia</title>
+<meta name="description" content="Twenty-five years of trusted, conservative chiropractic care on Smith Mountain Lake. Dr. Brad Herlehy, DC. Moneta, Virginia.">
+
+<!-- Fonts: Fraunces (display), Inter Tight (body), JetBrains Mono (data) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   WESTLAKE CHIROPRACTIC — DESIGN TOKENS
+   Editorial dark with lake glow. Charcoal / Ivory / Warm Amber.
+   Tokens live as CSS custom properties so the same system
+   scales across the 38-page site.
+   ============================================================ */
+
+:root, [data-theme="dark"] {
+  --bg-primary:        #0E0F12;
+  --bg-secondary:      #16181D;
+  --bg-tertiary:       #1E2128;
+  --bg-deepest:        #08090B;
+  --text-primary:      #F5F1EA;
+  --text-secondary:    #A8A29E;
+  --text-muted:        #6B6862;
+  --accent-amber:      #E8A95A;
+  --accent-amber-hover:#F0BC78;
+  --accent-amber-soft: rgba(232, 169, 90, 0.14);
+  --accent-teal:       #4A9B8E;
+  --accent-teal-hover: #5BAFA2;
+  --border-subtle:     rgba(245, 241, 234, 0.08);
+  --border-medium:     rgba(245, 241, 234, 0.16);
+  --shadow-glow:       0 0 32px rgba(232, 169, 90, 0.18);
+  --portrait-bg:       radial-gradient(ellipse 70% 90% at 30% 25%,
+                          rgba(232, 169, 90, 0.32) 0%,
+                          rgba(232, 169, 90, 0.08) 40%,
+                          rgba(232, 169, 90, 0.00) 70%);
+}
+
+[data-theme="light"] {
+  --bg-primary:        #FAF7F1;
+  --bg-secondary:      #F2EDE3;
+  --bg-tertiary:       #E8E1D2;
+  --bg-deepest:        #EDE6D6;
+  --text-primary:      #1A1B1F;
+  --text-secondary:    #4A4744;
+  --text-muted:        #807A72;
+  --accent-amber:      #C68A3F;
+  --accent-amber-hover:#B07526;
+  --accent-amber-soft: rgba(198, 138, 63, 0.16);
+  --accent-teal:       #357268;
+  --accent-teal-hover: #275A52;
+  --border-subtle:     rgba(26, 27, 31, 0.08);
+  --border-medium:     rgba(26, 27, 31, 0.16);
+  --shadow-glow:       0 0 32px rgba(198, 138, 63, 0.22);
+  --portrait-bg:       radial-gradient(ellipse 70% 90% at 30% 25%,
+                          rgba(198, 138, 63, 0.36) 0%,
+                          rgba(198, 138, 63, 0.10) 40%,
+                          rgba(198, 138, 63, 0.00) 70%);
+}
+
+/* ----- Reset / base ----- */
+*,*::before,*::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: "Inter Tight", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  transition: background-color 400ms ease, color 400ms ease;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+
+/* ----- Type primitives ----- */
+.font-display { font-family: "Fraunces", Georgia, serif; }
+.font-mono    { font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+.eyebrow {
+  font-family: "Inter Tight", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-amber);
+}
+
+/* Accessibility — skip link */
+.skip-link {
+  position: absolute; top: -40px; left: 8px;
+  background: var(--accent-amber); color: var(--bg-primary);
+  padding: 8px 16px; border-radius: 8px;
+  font-weight: 600; font-size: 14px;
+  z-index: 10000;
+  transition: top 200ms ease;
+}
+.skip-link:focus { top: 8px; }
+
+/* Visible focus rings */
+:focus-visible {
+  outline: 2px solid var(--accent-amber);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   LAYOUT WRAPPERS
+   ============================================================ */
+.wrap {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+@media (max-width: 768px) {
+  .wrap { padding: 0 20px; }
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: 80px;
+  display: flex; align-items: center;
+  background: color-mix(in oklab, var(--bg-primary) 80%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: height 280ms cubic-bezier(.2,.7,.2,1),
+              background 280ms ease,
+              backdrop-filter 280ms ease;
+}
+.nav.scrolled {
+  height: 64px;
+  background: color-mix(in oklab, var(--bg-primary) 92%, transparent);
+  backdrop-filter: blur(24px) saturate(160%);
+}
+.nav-inner {
+  width: 100%; max-width: 1400px; margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+.brand {
+  display: inline-flex; align-items: baseline; gap: 8px;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+.brand .b-mark { font-family: "Fraunces", serif; font-weight: 700; color: var(--text-primary); }
+.brand .b-dot  { color: var(--accent-amber); font-size: 18px; line-height: 1; transform: translateY(-1px); }
+.brand .b-sub  { font-family: "Inter Tight", sans-serif; font-weight: 500; color: var(--text-secondary); }
+
+.nav-links {
+  display: flex; justify-content: center; gap: 28px;
+  list-style: none; margin: 0; padding: 0;
+}
+.nav-links a {
+  position: relative;
+  font-weight: 500; font-size: 14px;
+  color: var(--text-secondary);
+  padding: 6px 0;
+  transition: color 220ms ease;
+}
+.nav-links a::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  height: 1px; width: 0; background: var(--accent-amber);
+  transition: width 220ms cubic-bezier(.2,.7,.2,1);
+}
+.nav-links a:hover,
+.nav-links a:focus-visible { color: var(--text-primary); }
+.nav-links a:hover::after,
+.nav-links a:focus-visible::after { width: 100%; }
+
+.nav-right { display: inline-flex; align-items: center; gap: 14px; }
+.theme-toggle {
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  transition: color 220ms ease, border-color 220ms ease, background 220ms ease;
+}
+.theme-toggle:hover { color: var(--text-primary); border-color: var(--border-medium); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .sun { display: none; }
+[data-theme="light"] .theme-toggle .sun { display: block; }
+[data-theme="light"] .theme-toggle .moon { display: none; }
+
+/* Mobile nav */
+.mobile-only { display: none; }
+@media (max-width: 960px) {
+  .nav-links { display: none; }
+  .nav-inner { grid-template-columns: auto 1fr auto; }
+  .mobile-only { display: inline-flex; }
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px;
+  font-family: "Inter Tight", sans-serif;
+  font-weight: 600; font-size: 14px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: transform 220ms ease, background 220ms ease,
+              color 220ms ease, box-shadow 280ms ease,
+              border-color 220ms ease;
+  white-space: nowrap;
+}
+.btn-amber {
+  background: var(--accent-amber);
+  color: #0E0F12;
+}
+.btn-amber:hover {
+  background: var(--accent-amber-hover);
+  box-shadow: 0 0 0 4px var(--accent-amber-soft), var(--shadow-glow);
+  transform: translateY(-1px);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+.btn-ghost:hover {
+  border-color: var(--text-primary);
+  background: var(--accent-amber-soft);
+}
+.btn-lg { padding: 16px 30px; font-size: 16px; }
+.btn .arrow { transition: transform 220ms ease; display: inline-block; }
+.btn:hover .arrow { transform: translateX(4px); }
+
+/* ============================================================
+   HERO — SECTION 2
+   ============================================================ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  padding-top: 120px;
+  padding-bottom: 80px;
+  display: flex; align-items: center;
+  overflow: hidden;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 64px;
+  align-items: center;
+  width: 100%;
+}
+@media (max-width: 980px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+  .hero { padding-top: 100px; padding-bottom: 60px; }
+}
+
+.hero-left { max-width: 720px; }
+.hero-eyebrow { margin-bottom: 28px; }
+
+.hero-title {
+  font-family: "Fraunces", serif;
+  font-weight: 800;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(56px, 9.2vw, 132px);
+  line-height: 0.93;
+  letter-spacing: -0.025em;
+  margin: 0 0 32px;
+  color: var(--text-primary);
+}
+.hero-title .line { display: block; overflow: hidden; }
+.hero-title .line span { display: inline-block; }
+.hero-title .lake {
+  color: var(--accent-amber);
+  font-style: italic;
+  font-weight: 700;
+}
+
+.hero-sub {
+  font-size: 19px; line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin: 0 0 36px;
+}
+
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+
+.trust-row {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+.trust-row .dot { color: var(--accent-amber); }
+
+/* Hero right — portrait */
+.hero-right {
+  position: relative;
+  align-self: stretch;
+  min-height: 560px;
+}
+@media (max-width: 980px) {
+  .hero-right { min-height: 480px; }
+}
+
+.portrait-stage {
+  position: absolute; inset: 0;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.portrait-glow {
+  position: absolute;
+  inset: -10% -10% 0 -10%;
+  background: var(--portrait-bg);
+  filter: blur(8px);
+  z-index: 0;
+  pointer-events: none;
+}
+.portrait-orb {
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(232, 169, 90, 0.45) 0%,
+    rgba(232, 169, 90, 0.12) 40%,
+    rgba(232, 169, 90, 0) 70%);
+  filter: blur(20px);
+  z-index: 0;
+  pointer-events: none;
+}
+.portrait-img {
+  position: relative;
+  z-index: 1;
+  max-height: 80vh;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: bottom;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.5));
+}
+
+/* Credentials card */
+.cred-card {
+  position: absolute;
+  left: -12px; bottom: 24px;
+  z-index: 3;
+  max-width: 300px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 22px 24px;
+  transform: rotate(-2deg);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+}
+.cred-card .label {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.cred-card .meta {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+.cred-card .credline {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 10px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px; color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+.cred-card .credline::before {
+  content: ""; display: inline-block; width: 18px; height: 1px;
+  background: var(--accent-amber);
+}
+
+@media (max-width: 980px) {
+  .cred-card { left: 8px; bottom: 8px; max-width: 260px; }
+}
+
+/* Scroll indicator */
+.scroll-ind {
+  position: absolute;
+  left: 32px; right: 32px; bottom: 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.scroll-ind .chev {
+  display: inline-block; margin-left: 6px;
+  animation: chevbob 2.4s ease-in-out infinite;
+}
+@keyframes chevbob {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(4px); }
+}
+
+/* ============================================================
+   TRUST STRIP — SECTION 3
+   ============================================================ */
+.trust {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 22px 0;
+  overflow: hidden;
+}
+.trust-inner {
+  display: flex; justify-content: center; align-items: center;
+  flex-wrap: wrap;
+  gap: 28px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+.trust-item { display: inline-flex; align-items: baseline; gap: 8px; }
+.trust-item .big {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--accent-amber);
+  letter-spacing: 0;
+}
+.trust-divider {
+  width: 1px; height: 18px; background: var(--border-subtle);
+}
+@media (max-width: 768px) {
+  .trust { padding: 18px 0; }
+  .trust-inner {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .trust-inner::-webkit-scrollbar { display: none; }
+}
+
+/* ============================================================
+   THE WESTLAKE DIFFERENCE — SECTION 4
+   ============================================================ */
+.diff {
+  padding: 160px 0;
+  background: var(--bg-primary);
+}
+@media (max-width: 768px) { .diff { padding: 80px 0; } }
+
+.diff-grid {
+  display: grid;
+  grid-template-columns: 35% 1fr;
+  gap: 10%;
+  align-items: start;
+}
+@media (max-width: 980px) {
+  .diff-grid { grid-template-columns: 1fr; gap: 48px; }
+}
+
+.diff-left { position: sticky; top: 110px; }
+@media (max-width: 980px) { .diff-left { position: static; } }
+
+.diff-head {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: clamp(36px, 4.4vw, 56px);
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+  color: var(--text-primary);
+  margin: 24px 0 28px;
+}
+.diff-pull {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(20px, 2vw, 24px);
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin: 0;
+  padding-left: 18px;
+  border-left: 2px solid var(--accent-amber);
+}
+
+.diff-paras p {
+  font-size: 18px;
+  line-height: 1.7;
+  max-width: 560px;
+  color: var(--text-primary);
+  margin: 0 0 28px;
+}
+.diff-paras p strong {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.tenets {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px 40px;
+  max-width: 580px;
+}
+@media (max-width: 540px) { .tenets { grid-template-columns: 1fr; } }
+.tenet .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--accent-amber);
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+.tenet .name {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.tenet .desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   3D SPINE TEASE — SECTION 5
+   ============================================================ */
+.spine {
+  position: relative;
+  padding: 140px 0;
+  background: var(--bg-primary);
+  text-align: center;
+  overflow: hidden;
+}
+.spine::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%,
+    rgba(232, 169, 90, 0.14) 0%,
+    rgba(232, 169, 90, 0.03) 35%,
+    transparent 65%);
+  pointer-events: none;
+}
+.spine-inner { position: relative; z-index: 1; }
+.spine h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: clamp(48px, 6.5vw, 80px);
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+.spine h3 {
+  font-family: "Fraunces", serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(24px, 3vw, 36px);
+  color: var(--text-secondary);
+  margin: 0 0 64px;
+}
+
+.spine-viz {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto 56px;
+  height: 480px;
+  display: flex; align-items: center; justify-content: center;
+}
+.spine-svg {
+  height: 100%;
+  width: auto;
+  opacity: 0.85;
+}
+.spine-svg path,
+.spine-svg rect.vert {
+  fill: var(--text-primary);
+  fill-opacity: 0.28;
+}
+.spine-svg .disc {
+  fill: var(--text-primary);
+  fill-opacity: 0.10;
+}
+.spine-dot {
+  position: absolute;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--accent-amber);
+  box-shadow: 0 0 0 4px var(--accent-amber-soft), 0 0 24px rgba(232,169,90,0.6);
+  animation: pulse 3s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1);   box-shadow: 0 0 0 4px var(--accent-amber-soft), 0 0 24px rgba(232,169,90,0.5); }
+  50%     { transform: scale(1.18); box-shadow: 0 0 0 8px var(--accent-amber-soft), 0 0 36px rgba(232,169,90,0.85); }
+}
+.spine-dot.d-c2 { top: 14%;  left: calc(50% + 38px); }
+.spine-dot.d-c2 { animation-delay: 0s; }
+.spine-dot.d-t6 { top: 41%;  left: calc(50% - 50px); animation-delay: .8s; }
+.spine-dot.d-l4 { top: 70%;  left: calc(50% + 42px); animation-delay: 1.6s; }
+
+.spine-label {
+  position: absolute;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.spine-label::before {
+  content: ""; display: inline-block;
+  width: 28px; height: 1px;
+  background: var(--accent-amber);
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.spine-label.l-c2 { top: calc(14% + 2px);  left: calc(50% + 62px); }
+.spine-label.l-t6 { top: calc(41% + 2px);  right: calc(50% + 0px); }
+.spine-label.l-t6::before { display: none; }
+.spine-label.l-t6::after {
+  content: ""; display: inline-block;
+  width: 28px; height: 1px;
+  background: var(--accent-amber);
+  vertical-align: middle;
+  margin-left: 10px;
+}
+.spine-label.l-l4 { top: calc(70% + 2px);  left: calc(50% + 66px); }
+
+.spine-caption {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin-top: 18px;
+}
+
+.spinney-guide {
+  position: absolute;
+  left: -40px; bottom: -10px;
+  width: 110px;
+  z-index: 2;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,0.4));
+  animation: breathe 4s ease-in-out infinite;
+}
+@media (max-width: 768px) { .spinney-guide { display: none; } }
+
+@keyframes breathe {
+  0%,100% { transform: scale(1.00); }
+  50%     { transform: scale(1.015); }
+}
+
+/* ============================================================
+   SERVICES & CONDITIONS GRID — SECTION 6
+   ============================================================ */
+.cond {
+  padding: 140px 0;
+  background: var(--bg-secondary);
+}
+@media (max-width: 768px) { .cond { padding: 80px 0; } }
+
+.section-head {
+  max-width: 760px;
+  margin: 0 0 64px;
+}
+.section-head .eyebrow { margin-bottom: 16px; }
+.section-head h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: clamp(36px, 4.6vw, 56px);
+  line-height: 1.03;
+  letter-spacing: -0.022em;
+  color: var(--text-primary);
+  margin: 0 0 18px;
+}
+.section-head p {
+  font-size: 18px; line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 580px;
+  margin: 0;
+}
+
+.cond-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+@media (max-width: 1080px) { .cond-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px)  { .cond-grid { grid-template-columns: 1fr; } }
+
+.cond-card {
+  position: relative;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 28px 26px 60px;
+  transition: transform 320ms cubic-bezier(.2,.7,.2,1),
+              border-color 320ms ease,
+              box-shadow 320ms ease,
+              background 320ms ease;
+  cursor: pointer;
+  min-height: 200px;
+  display: flex; flex-direction: column;
+}
+.cond-card:hover,
+.cond-card:focus-visible {
+  transform: translateY(-4px);
+  border-color: var(--border-medium);
+  box-shadow: 0 0 0 1px var(--accent-amber-soft), 0 14px 40px rgba(0,0,0,0.4),
+              0 0 0 6px transparent;
+}
+.cond-card .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--accent-amber);
+  letter-spacing: 0.08em;
+  margin-bottom: 18px;
+}
+.cond-card .name {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.cond-card .tease {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+.cond-card .arr {
+  position: absolute;
+  right: 22px; bottom: 20px;
+  font-size: 18px;
+  color: var(--accent-amber);
+  transition: transform 240ms ease;
+}
+.cond-card:hover .arr { transform: translateX(4px); }
+
+.cond-foot {
+  margin-top: 56px;
+  text-align: center;
+}
+.cond-foot a {
+  font-weight: 600;
+  color: var(--accent-amber);
+  font-size: 15px;
+  display: inline-flex; align-items: center; gap: 6px;
+  border-bottom: 1px solid var(--accent-amber);
+  padding-bottom: 2px;
+  transition: gap 220ms ease, color 220ms ease;
+}
+.cond-foot a:hover { gap: 12px; color: var(--accent-amber-hover); }
+
+/* ============================================================
+   TESTIMONIALS — SECTION 7
+   ============================================================ */
+.testimonials {
+  padding: 140px 0;
+  background: var(--bg-primary);
+}
+@media (max-width: 768px) { .testimonials { padding: 80px 0; } }
+.testimonials h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: clamp(36px, 4.4vw, 56px);
+  line-height: 1.03;
+  letter-spacing: -0.022em;
+  color: var(--text-primary);
+  margin: 0 0 80px;
+  max-width: 780px;
+}
+.t-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 56px;
+}
+@media (max-width: 980px) { .t-grid { grid-template-columns: 1fr; gap: 64px; } }
+
+.t-item { position: relative; padding-top: 30px; }
+.t-item .glyph {
+  position: absolute;
+  top: -28px; left: -18px;
+  font-family: "Fraunces", serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: 140px;
+  line-height: 1;
+  color: var(--accent-amber);
+  opacity: 0.28;
+  pointer-events: none;
+  user-select: none;
+}
+.t-item blockquote {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0 0 24px;
+  letter-spacing: -0.005em;
+}
+.t-item .attr {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.t-item .since {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 18px;
+}
+.t-item .disclaim {
+  font-size: 11px;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 14px;
+  max-width: 320px;
+}
+
+/* ============================================================
+   LOCATION & HOURS — SECTION 8
+   ============================================================ */
+.loc {
+  padding: 140px 0;
+  background: var(--bg-secondary);
+}
+@media (max-width: 768px) { .loc { padding: 80px 0; } }
+.loc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+@media (max-width: 980px) { .loc-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+.loc-left h2 {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: clamp(36px, 4.2vw, 48px);
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+  margin: 18px 0 28px;
+  color: var(--text-primary);
+}
+.loc-addr {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: 22px;
+  max-width: 360px;
+}
+.loc-phone {
+  display: inline-block;
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 32px;
+  letter-spacing: -0.018em;
+  color: var(--text-primary);
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--border-medium);
+  padding-bottom: 6px;
+  transition: color 220ms ease, border-color 220ms ease;
+}
+.loc-phone:hover { color: var(--accent-amber); border-color: var(--accent-amber); }
+
+.hours {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  line-height: 1.95;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+  padding: 18px 22px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  background: var(--bg-tertiary);
+  max-width: 320px;
+}
+.hours .day  { display: inline-block; width: 110px; color: var(--text-primary); }
+.hours .closed { color: var(--text-muted); }
+
+.loc-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* Map placeholder */
+.map {
+  position: relative;
+  width: 100%; height: 460px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+}
+.map svg { width: 100%; height: 100%; display: block; }
+.map .pin {
+  position: absolute;
+  left: 56%; top: 48%;
+  width: 16px; height: 16px;
+  background: var(--accent-amber);
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px var(--accent-amber-soft), 0 0 24px rgba(232,169,90,0.7);
+  animation: pulse 3s ease-in-out infinite;
+}
+.map .map-label {
+  position: absolute;
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  padding: 6px 10px;
+  background: color-mix(in oklab, var(--bg-primary) 80%, transparent);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+}
+.map .map-label.pin-lbl  { left: 56%; top: 48%; transform: translate(20px, -30px); }
+.map .map-label.lake-lbl {
+  left: 22%; top: 72%;
+  font-style: italic;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  background: transparent;
+  border: none;
+  color: var(--accent-teal);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   FOOTER — SECTION 9
+   ============================================================ */
+footer {
+  background: var(--bg-deepest);
+  border-top: 1px solid var(--border-subtle);
+  padding: 100px 0 32px;
+}
+.foot-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.4fr 1.4fr;
+  gap: 64px;
+}
+@media (max-width: 880px) { .foot-grid { grid-template-columns: 1fr 1fr; gap: 40px; } }
+@media (max-width: 540px) { .foot-grid { grid-template-columns: 1fr; } }
+
+.foot-brand .brand { font-size: 24px; margin-bottom: 18px; }
+.foot-tag {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--text-primary);
+  margin: 0 0 18px;
+  max-width: 320px;
+  line-height: 1.4;
+}
+.foot-desc {
+  font-size: 13px; line-height: 1.55;
+  color: var(--text-muted);
+  max-width: 320px;
+}
+
+.foot-col h4 {
+  font-family: "Inter Tight", sans-serif;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  margin: 0 0 18px;
+  font-weight: 600;
+}
+.foot-col ul { list-style: none; margin: 0 0 30px; padding: 0; }
+.foot-col li { margin-bottom: 9px; }
+.foot-col a {
+  font-size: 14px;
+  color: var(--text-secondary);
+  transition: color 220ms ease;
+}
+.foot-col a:hover { color: var(--accent-amber); }
+
+.foot-social { display: flex; gap: 10px; margin-top: 8px; }
+.foot-social a {
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  transition: color 220ms ease, border-color 220ms ease, background 220ms ease;
+}
+.foot-social a:hover { color: var(--accent-amber); border-color: var(--accent-amber); }
+.foot-social svg { width: 16px; height: 16px; }
+
+.foot-bottom {
+  margin-top: 80px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex; justify-content: space-between; gap: 24px;
+  flex-wrap: wrap;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+}
+.foot-bottom .disclaim { max-width: 540px; text-align: right; }
+@media (max-width: 640px) { .foot-bottom .disclaim { text-align: left; } }
+
+/* ============================================================
+   FLOATING ELEMENTS
+   ============================================================ */
+.spinney-launcher {
+  position: fixed;
+  right: 24px; bottom: 24px;
+  z-index: 90;
+  display: inline-flex; align-items: center;
+  height: 72px;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 0;
+  width: 72px;
+  overflow: visible;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--border-subtle), 0 8px 24px rgba(0,0,0,0.4),
+              0 0 16px var(--accent-amber-soft);
+  transition: width 320ms cubic-bezier(.2,.7,.2,1),
+              border-color 240ms ease,
+              box-shadow 320ms ease,
+              padding-right 320ms ease;
+}
+.spinney-launcher:hover,
+.spinney-launcher:focus-visible {
+  width: 240px;
+  border-color: var(--accent-amber);
+  padding-right: 24px;
+  box-shadow: 0 0 0 1px var(--accent-amber-soft), 0 14px 32px rgba(0,0,0,0.5),
+              0 0 28px rgba(232,169,90,0.45);
+}
+.spinney-launcher .avatar {
+  position: relative;
+  flex: 0 0 72px;
+  width: 72px; height: 72px;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.spinney-launcher .avatar img {
+  position: absolute;
+  height: 88px; width: auto;
+  bottom: -4px; left: 50%;
+  transform: translateX(-50%);
+  animation: breathe 4s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+}
+.spinney-launcher .lbl {
+  flex: 1;
+  margin-left: 12px;
+  margin-right: 8px;
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 220ms ease 80ms, transform 280ms ease 80ms;
+  pointer-events: none;
+}
+.spinney-launcher:hover .lbl,
+.spinney-launcher:focus-visible .lbl,
+.spinney-launcher.open .lbl { opacity: 1; transform: translateX(0); }
+.spinney-launcher .lbl .small {
+  display: block;
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 400;
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* Spinney chat modal */
+.chat-modal {
+  position: fixed;
+  right: 24px; bottom: 110px;
+  z-index: 95;
+  width: 340px;
+  max-width: calc(100vw - 48px);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-medium);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 24px var(--accent-amber-soft);
+  display: none;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: transform 280ms cubic-bezier(.2,.7,.2,1), opacity 220ms ease;
+}
+.chat-modal.open {
+  display: block;
+}
+.chat-modal.in {
+  transform: translateY(0);
+  opacity: 1;
+}
+.chat-modal h4 {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 18px;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+.chat-modal p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 16px;
+  line-height: 1.55;
+}
+.chat-modal .chat-msg {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+}
+.chat-modal .chat-msg .from {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--accent-amber);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.chat-modal .chat-disclaim {
+  font-size: 10.5px;
+  font-style: italic;
+  color: var(--text-muted);
+  line-height: 1.5;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 10px;
+}
+.chat-modal .close-x {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 26px; height: 26px;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+
+/* Sticky mobile book bar */
+.mobile-book {
+  display: none;
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 80;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  padding: 8px;
+  gap: 8px;
+}
+.mobile-book .mb {
+  flex: 1;
+  height: 56px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+.mobile-book .mb-amber { background: var(--accent-amber); color: var(--bg-primary); }
+.mobile-book .mb-ghost { background: transparent; border: 1px solid var(--border-medium); color: var(--text-primary); }
+@media (max-width: 768px) {
+  .mobile-book { display: flex; }
+  body { padding-bottom: 80px; }
+  .spinney-launcher { bottom: 88px; }
+  .chat-modal { bottom: 170px; }
+}
+
+/* ============================================================
+   CUSTOM CURSOR (optional editorial polish — desktop only)
+   ============================================================ */
+@media (hover: hover) and (pointer: fine) and (min-width: 980px) {
+  body.has-cursor { cursor: none; }
+  body.has-cursor * { cursor: none; }
+  .cursor-dot, .cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-amber);
+  }
+  .cursor-ring {
+    width: 24px; height: 24px;
+    border: 1px solid var(--accent-amber);
+    border-radius: 50%;
+    opacity: 0.55;
+    transition: width 220ms ease, height 220ms ease, opacity 220ms ease;
+  }
+  body.cursor-hover .cursor-ring { width: 40px; height: 40px; opacity: 0.9; }
+}
+.cursor-dot, .cursor-ring { display: none; }
+@media (hover: hover) and (pointer: fine) and (min-width: 980px) {
+  body.has-cursor .cursor-dot, body.has-cursor .cursor-ring { display: block; }
+}
+
+/* ============================================================
+   REVEAL / ENTRY ANIMATIONS
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 700ms cubic-bezier(.2,.7,.2,1),
+              transform 700ms cubic-bezier(.2,.7,.2,1);
+  will-change: opacity, transform;
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* Staggered hero entry */
+.hero-fade {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: heroIn 800ms cubic-bezier(.2,.7,.2,1) forwards;
+}
+.hero-fade.delay-1 { animation-delay: 0ms; }
+.hero-fade.delay-2 { animation-delay: 240ms; }
+.hero-fade.delay-3 { animation-delay: 520ms; }
+.hero-fade.delay-4 { animation-delay: 760ms; }
+.hero-fade.delay-5 { animation-delay: 980ms; }
+.hero-fade.delay-6 { animation-delay: 1180ms; }
+@keyframes heroIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Word stagger for headline */
+.hero-title .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(110%);
+  animation: wordUp 800ms cubic-bezier(.2,.7,.2,1) forwards;
+}
+@keyframes wordUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Portrait entry */
+.portrait-img {
+  opacity: 0;
+  animation: portIn 1000ms ease-out 200ms forwards;
+}
+@keyframes portIn {
+  to { opacity: 1; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  .hero-fade, .hero-title .word, .portrait-img { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body data-theme="dark">
+
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<!-- Custom cursor -->
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<!-- ===================================================
+     NAVIGATION
+=====================================================-->
+<header class="nav" id="nav" role="banner">
+  <div class="nav-inner">
+    <a href="#" class="brand" aria-label="Westlake Chiropractic, home">
+      <span class="b-mark">Westlake</span>
+      <span class="b-dot">•</span>
+      <span class="b-sub">Chiropractic</span>
+    </a>
+
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#diff">About</a></li>
+        <li><a href="#cond">Services</a></li>
+        <li><a href="#cond">Conditions</a></li>
+        <li><a href="#spine">Spine</a></li>
+        <li><a href="#diff">Tools</a></li>
+        <li><a href="#testimonials">Education</a></li>
+        <li><a href="#loc">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle light or dark mode">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <a href="#book" class="btn btn-amber">Book Appointment</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ===================================================
+     SECTION 2 — HERO
+=====================================================-->
+<section class="hero" id="hero" aria-label="Hero">
+  <div class="wrap">
+    <div class="hero-grid">
+
+      <div class="hero-left">
+        <div class="eyebrow hero-eyebrow hero-fade delay-1">SMITH MOUNTAIN LAKE &nbsp;•&nbsp; SINCE 2000</div>
+
+        <h1 class="hero-title" id="heroTitle">
+          <span class="line"><span class="word" style="animation-delay:200ms">Move</span>&nbsp;<span class="word" style="animation-delay:280ms">better.</span></span>
+          <span class="line"><span class="word" style="animation-delay:420ms">Live</span>&nbsp;<span class="word" style="animation-delay:500ms">better.</span></span>
+          <span class="line"><span class="word" style="animation-delay:640ms">Stay</span>&nbsp;<span class="word" style="animation-delay:720ms">on</span>&nbsp;<span class="word" style="animation-delay:800ms">the</span>&nbsp;<span class="word lake" style="animation-delay:900ms">lake.</span></span>
+        </h1>
+
+        <p class="hero-sub hero-fade delay-4">
+          Twenty-five years of trusted, conservative chiropractic care for the Lake community.
+          No surgery. No medications. Just expert hands and a plan that actually works.
+        </p>
+
+        <div class="hero-ctas hero-fade delay-5">
+          <a href="#book" class="btn btn-amber btn-lg">Book Your First Visit</a>
+          <a href="#spine" class="btn btn-ghost btn-lg">Explore the 3D Spine <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+
+        <div class="trust-row hero-fade delay-6">
+          <span><span class="dot">★</span> 4.9 on Google</span>
+          <span aria-hidden="true">·</span>
+          <span>A+ BBB</span>
+          <span aria-hidden="true">·</span>
+          <span>25 years in Moneta</span>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="portrait-stage">
+          <div class="portrait-glow" aria-hidden="true"></div>
+          <div class="portrait-orb" aria-hidden="true"></div>
+          <img class="portrait-img"
+               src="assets/brad.png"
+               alt="Dr. Brad Herlehy, chiropractor at Westlake Chiropractic in Moneta, Virginia">
+          <div class="cred-card">
+            <div class="label">Dr. Brad Herlehy, DC</div>
+            <div class="meta">Doctor of Chiropractic — NY Chiropractic College.<br>25 years practicing. Buffalo, NY → Moneta, VA.</div>
+            <div class="credline">LICENSED DC · VA &amp; NY</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="scroll-ind wrap" aria-hidden="true">
+    <span>01 / 09</span>
+    <span>scroll <span class="chev">▾</span></span>
+  </div>
+</section>
+
+<!-- ===================================================
+     SECTION 3 — TRUST STRIP
+=====================================================-->
+<section class="trust" aria-label="Trust signals">
+  <div class="wrap">
+    <div class="trust-inner">
+      <span class="trust-item"><span class="big">4.9★</span> Google Reviews</span>
+      <span class="trust-divider" aria-hidden="true"></span>
+      <span class="trust-item"><span class="big">100%</span> Recommend on Facebook</span>
+      <span class="trust-divider" aria-hidden="true"></span>
+      <span class="trust-item"><span class="big">A+</span> BBB Accredited Since 2004</span>
+      <span class="trust-divider" aria-hidden="true"></span>
+      <span class="trust-item"><span class="big">25</span> Years on Smith Mountain Lake</span>
+      <span class="trust-divider" aria-hidden="true"></span>
+      <span class="trust-item"><span class="big">1,000+</span> Patients Helped</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     SECTION 4 — THE WESTLAKE DIFFERENCE
+=====================================================-->
+<section class="diff" id="diff" aria-label="The Westlake Difference">
+  <div class="wrap">
+    <div class="diff-grid">
+
+      <div class="diff-left reveal">
+        <div class="eyebrow">OUR APPROACH</div>
+        <h2 class="diff-head">Conservative care. Confident hands. Twenty-five years on the same spine.</h2>
+        <p class="diff-pull">"We don't sell adjustments. We sell results."</p>
+      </div>
+
+      <div class="diff-right">
+        <div class="diff-paras">
+          <p class="reveal">Dr. Brad Herlehy has practiced chiropractic on Smith Mountain Lake since the year 2000. In a community where retirees, weekend boaters, pickleball players, and full-time families all need to keep moving — Brad's hands have quietly become the answer.</p>
+          <p class="reveal">His approach is conservative by design. No long-term contracts. No upselling. Each visit is built around what your spine actually needs that day, with at-home exercises so progress continues after you leave.</p>
+          <p class="reveal">It's the kind of care you can only get from a doctor who has seen the same patients for fifteen years and intends to be there for fifteen more.</p>
+        </div>
+
+        <div class="tenets reveal">
+          <div class="tenet">
+            <div class="num">01</div>
+            <div class="name">Conservative First</div>
+            <div class="desc">We exhaust the gentle options before considering anything else.</div>
+          </div>
+          <div class="tenet">
+            <div class="num">02</div>
+            <div class="name">Honest Pricing</div>
+            <div class="desc">No long-term packages. Pay for what you need.</div>
+          </div>
+          <div class="tenet">
+            <div class="num">03</div>
+            <div class="name">Whole Care</div>
+            <div class="desc">Adjustments, exercises, posture coaching, lifestyle context.</div>
+          </div>
+          <div class="tenet">
+            <div class="num">04</div>
+            <div class="name">Time On Task</div>
+            <div class="desc">Real conversation, real exam, real plan. Never rushed.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     SECTION 5 — 3D SPINE TEASE
+=====================================================-->
+<section class="spine" id="spine" aria-label="Interactive 3D Spine">
+  <div class="wrap spine-inner">
+    <h2 class="reveal">Find what's hurting.</h2>
+    <h3 class="reveal">Then learn why.</h3>
+
+    <div class="spine-viz reveal" role="img" aria-label="Stylized spine illustration with markers at C2, T6, and L4">
+      <!-- Stylized spine SVG: 5 cervical sections, 12 thoracic, 5 lumbar -->
+      <svg class="spine-svg" viewBox="0 0 200 720" aria-hidden="true">
+        <!-- generated programmatically below for crispness; using static rects + ovals -->
+        <!-- Skull base -->
+        <ellipse cx="100" cy="22" rx="32" ry="22" />
+        <!-- Vertebrae stack: drawn as rounded rects with disc separators -->
+        <g>
+          <!-- Cervical C1-C7 (7) -->
+          <rect class="vert" x="80"  y="48"  width="40" height="22" rx="6"/>
+          <rect class="disc" x="80"  y="71"  width="40" height="6"  rx="3"/>
+          <rect class="vert" x="78"  y="78"  width="44" height="22" rx="6"/>
+          <rect class="disc" x="78"  y="101" width="44" height="6"  rx="3"/>
+          <rect class="vert" x="76"  y="108" width="48" height="22" rx="6"/>
+          <rect class="disc" x="76"  y="131" width="48" height="6"  rx="3"/>
+          <rect class="vert" x="74"  y="138" width="52" height="22" rx="6"/>
+          <rect class="disc" x="74"  y="161" width="52" height="6"  rx="3"/>
+          <rect class="vert" x="72"  y="168" width="56" height="22" rx="6"/>
+          <rect class="disc" x="72"  y="191" width="56" height="6"  rx="3"/>
+          <rect class="vert" x="70"  y="198" width="60" height="22" rx="6"/>
+          <rect class="disc" x="70"  y="221" width="60" height="6"  rx="3"/>
+          <rect class="vert" x="68"  y="228" width="64" height="22" rx="6"/>
+          <rect class="disc" x="68"  y="251" width="64" height="6"  rx="3"/>
+          <!-- Thoracic T1-T12 (12) -->
+          <rect class="vert" x="66"  y="258" width="68" height="24" rx="6"/>
+          <rect class="disc" x="66"  y="283" width="68" height="6"  rx="3"/>
+          <rect class="vert" x="64"  y="290" width="72" height="24" rx="6"/>
+          <rect class="disc" x="64"  y="315" width="72" height="6"  rx="3"/>
+          <rect class="vert" x="62"  y="322" width="76" height="24" rx="6"/>
+          <rect class="disc" x="62"  y="347" width="76" height="6"  rx="3"/>
+          <rect class="vert" x="60"  y="354" width="80" height="24" rx="6"/>
+          <rect class="disc" x="60"  y="379" width="80" height="6"  rx="3"/>
+          <rect class="vert" x="58"  y="386" width="84" height="24" rx="6"/>
+          <rect class="disc" x="58"  y="411" width="84" height="6"  rx="3"/>
+          <rect class="vert" x="58"  y="418" width="84" height="24" rx="6"/>
+          <rect class="disc" x="58"  y="443" width="84" height="6"  rx="3"/>
+          <rect class="vert" x="58"  y="450" width="84" height="24" rx="6"/>
+          <rect class="disc" x="58"  y="475" width="84" height="6"  rx="3"/>
+          <!-- Lumbar L1-L5 (5) -->
+          <rect class="vert" x="54"  y="482" width="92" height="28" rx="7"/>
+          <rect class="disc" x="54"  y="511" width="92" height="7"  rx="3"/>
+          <rect class="vert" x="52"  y="519" width="96" height="28" rx="7"/>
+          <rect class="disc" x="52"  y="548" width="96" height="7"  rx="3"/>
+          <rect class="vert" x="50"  y="556" width="100" height="28" rx="7"/>
+          <rect class="disc" x="50"  y="585" width="100" height="7"  rx="3"/>
+          <rect class="vert" x="48"  y="593" width="104" height="28" rx="7"/>
+          <rect class="disc" x="48"  y="622" width="104" height="7"  rx="3"/>
+          <rect class="vert" x="46"  y="630" width="108" height="28" rx="7"/>
+          <!-- Sacrum -->
+          <path d="M50 660 Q100 720 150 660 L150 668 Q100 720 50 668 Z"/>
+        </g>
+      </svg>
+
+      <!-- Glowing markers -->
+      <div class="spine-dot d-c2" aria-hidden="true"></div>
+      <div class="spine-dot d-t6" aria-hidden="true"></div>
+      <div class="spine-dot d-l4" aria-hidden="true"></div>
+
+      <div class="spine-label l-c2">Headaches</div>
+      <div class="spine-label l-t6">Mid-back tension</div>
+      <div class="spine-label l-l4">Lower back &amp; sciatica</div>
+
+      <img class="spinney-guide" src="assets/spinney.png"
+           alt="Spinney, the Westlake Chiropractic mascot">
+    </div>
+
+    <div class="reveal">
+      <a href="#spine-experience" class="btn btn-amber btn-lg">Explore the Interactive Spine <span class="arrow" aria-hidden="true">→</span></a>
+      <div class="spine-caption">Click any vertebra. See what it controls. Understand your body.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     SECTION 6 — SERVICES & CONDITIONS GRID
+=====================================================-->
+<section class="cond" id="cond" aria-label="Services and conditions">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">WHAT WE TREAT</div>
+      <h2>From everyday aches to lake-life injuries.</h2>
+      <p>Twelve common conditions. Seven core services. One doctor who's seen them all.</p>
+    </div>
+
+    <div class="cond-grid">
+      <!-- 8 visible cards on home; full 12 live on /conditions -->
+      <a class="cond-card reveal" href="#" tabindex="0">
+        <div class="num">01</div>
+        <div class="name">Lower Back Pain</div>
+        <div class="tease">The most common reason patients walk through the door — and walk out feeling better.</div>
+        <div class="arr" aria-hidden="true">→</div>
+      </a>
+      <a class="cond-card reveal" href="#" tabindex="0">
+        <div class="num">02</div>
+        <div class="name">Neck Pain</div>
+        <div class="tease">Desk posture, sleep position, screen time. Gentle adjustments that hold.</div>
+        <div class="arr" aria-hidden="true">→</div>
+      </a>
+      <a class="cond-card reveal" href="#" tabindex="0">
+        <div class="num">03</div>
+        <div class="name">Sciatica</div>
+        <div class="tease">Radiating leg pain isn't your back's problem alone. We find the root.</div>
+        <div class="arr" aria-hidden="true">→</div>
+      </a>
+      <a class="cond-card reveal" href="#" tabindex="0">
+        <div class="num">04</div>
+        <div class="name">Headaches</div>
+        <div class="tease">Cervicogenic and tension headaches often start in the neck. We can help.</div>
+        <div class="arr" aria-hidden="true">→</div>
+      </a>
+      <a class="cond-card reveal" href="#" tabindex="0">
+        <div class="num">05</div>
+        <div class="name">Shoulder Pain</div>
+        <div class="tease">Rotator, scapula, thoracic — three parts of one problem. Treated together.</div>
+        <div class="arr" aria-hidden="true">→</div>
+      </a>
+      <a class="cond-card reveal" href="#" tabindex="0">
+        <div class="num">06</div>
+        <div class="name">Whiplash</div>
+        <div class="tease">After a collision, the window for conservative care matters. Don't wait.</div>
+        <div class="arr" aria-hidden="true">→</div>
+      </a>
+      <a class="cond-card reveal" href="#" tabindex="0">
+        <div class="num">07</div>
+        <div class="name">Sports Injury</div>
+        <div class="tease">Pickleball, golf, wakeboarding. Get back to the lake without losing the season.</div>
+        <div class="arr" aria-hidden="true">→</div>
+      </a>
+      <a class="cond-card reveal" href="#" tabindex="0">
+        <div class="num">08</div>
+        <div class="name">Herniated Disc</div>
+        <div class="tease">Conservative care first. Many disc injuries resolve without surgery.</div>
+        <div class="arr" aria-hidden="true">→</div>
+      </a>
+    </div>
+
+    <div class="cond-foot reveal">
+      <a href="#">See all conditions <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     SECTION 7 — TESTIMONIALS
+=====================================================-->
+<section class="testimonials" id="testimonials" aria-label="Patient stories">
+  <div class="wrap">
+    <h2 class="reveal">Twenty-five years.<br>Same Brad. Same hands.</h2>
+
+    <div class="t-grid">
+
+      <article class="t-item reveal">
+        <span class="glyph" aria-hidden="true">"</span>
+        <blockquote>"Brad's the only chiropractor I've ever trusted. I came in skeptical fifteen years ago and I'm still coming in."</blockquote>
+        <div class="attr">Mark T.</div>
+        <div class="since">PATIENT SINCE 2010</div>
+        <div class="disclaim">Individual results may vary. Testimonials reflect personal experience and are not a guarantee of outcomes.</div>
+      </article>
+
+      <article class="t-item reveal">
+        <span class="glyph" aria-hidden="true">"</span>
+        <blockquote>"I drive 40 minutes past two other clinics to see him. He explains what he's doing and why. Nobody else does that."</blockquote>
+        <div class="attr">Susan W.</div>
+        <div class="since">PATIENT SINCE 2017</div>
+        <div class="disclaim">Individual results may vary. Testimonials reflect personal experience and are not a guarantee of outcomes.</div>
+      </article>
+
+      <article class="t-item reveal">
+        <span class="glyph" aria-hidden="true">"</span>
+        <blockquote>"He watches you walk in and he already knows. The first visit I felt heard for the first time in years."</blockquote>
+        <div class="attr">Robert K.</div>
+        <div class="since">PATIENT SINCE 2019</div>
+        <div class="disclaim">Individual results may vary. Testimonials reflect personal experience and are not a guarantee of outcomes.</div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
+     SECTION 8 — LOCATION & HOURS
+=====================================================-->
+<section class="loc" id="loc" aria-label="Location and hours">
+  <div class="wrap">
+    <div class="loc-grid">
+
+      <div class="loc-left reveal">
+        <div class="eyebrow">VISIT US</div>
+        <h2>Just off Route 122.</h2>
+        <div class="loc-addr">
+          70 Scruggs Road, Suite 106<br>
+          Moneta, VA 24121
+        </div>
+
+        <a class="loc-phone" href="tel:+15407210044">(540) 721-0044</a>
+
+        <div class="hours" aria-label="Office hours">
+          <div><span class="day">Monday</span>    09:00 — 18:00</div>
+          <div><span class="day">Tuesday</span>   09:00 — 18:00</div>
+          <div><span class="day">Wednesday</span> 09:00 — 18:00</div>
+          <div><span class="day">Thursday</span>  09:00 — 18:00</div>
+          <div><span class="day">Friday</span>    09:00 — 18:00</div>
+          <div><span class="day">Sat / Sun</span> <span class="closed">Closed</span></div>
+        </div>
+
+        <div class="loc-ctas">
+          <a href="tel:+15407210044" class="btn btn-amber btn-lg">Call Now</a>
+          <a href="#" class="btn btn-ghost btn-lg">Get Directions <span class="arrow" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <div class="loc-right reveal">
+        <div class="map" role="img" aria-label="Map showing Westlake Chiropractic location near Smith Mountain Lake">
+          <svg viewBox="0 0 600 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <!-- subtle grid -->
+            <defs>
+              <pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M40 0H0V40" fill="none" stroke="rgba(245,241,234,0.04)" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="600" height="460" fill="url(#g)"/>
+            <!-- Lake -->
+            <path d="M-20 380 Q60 260 180 320 Q260 360 320 320 Q420 240 520 320 Q580 360 620 320 L620 480 L-20 480 Z"
+                  fill="rgba(74,155,142,0.18)" stroke="rgba(74,155,142,0.4)" stroke-width="1"/>
+            <path d="M-20 380 Q60 260 180 320 Q260 360 320 320 Q420 240 520 320 Q580 360 620 320"
+                  fill="none" stroke="rgba(74,155,142,0.55)" stroke-width="1.2" stroke-dasharray="3 6"/>
+            <!-- Roads -->
+            <path d="M0 200 L600 220" stroke="rgba(245,241,234,0.18)" stroke-width="3" fill="none"/>
+            <path d="M180 0 L260 460" stroke="rgba(245,241,234,0.12)" stroke-width="2" fill="none"/>
+            <path d="M400 0 L360 460" stroke="rgba(245,241,234,0.10)" stroke-width="1.5" fill="none"/>
+            <path d="M0 90  L600 110" stroke="rgba(245,241,234,0.08)" stroke-width="1.5" fill="none"/>
+            <!-- Route 122 highlight -->
+            <path d="M0 210 L600 230" stroke="rgba(232,169,90,0.32)" stroke-width="4" fill="none"/>
+            <text x="20" y="206" fill="rgba(232,169,90,0.85)" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="2">ROUTE 122</text>
+          </svg>
+          <div class="pin" aria-hidden="true"></div>
+          <div class="map-label pin-lbl">Westlake Chiropractic</div>
+          <div class="map-label lake-lbl">Smith Mountain Lake</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================================================
+     SECTION 9 — FOOTER
+=====================================================-->
+<footer aria-label="Site footer">
+  <div class="wrap">
+    <div class="foot-grid">
+
+      <div class="foot-brand">
+        <a href="#" class="brand" aria-label="Westlake Chiropractic">
+          <span class="b-mark">Westlake</span>
+          <span class="b-dot">•</span>
+          <span class="b-sub">Chiropractic</span>
+        </a>
+        <p class="foot-tag">"Improving health one spine at a time."</p>
+        <p class="foot-desc">Smith Mountain Lake's trusted chiropractor since 2000. Conservative, hands-on care from a doctor who knows your name.</p>
+      </div>
+
+      <div class="foot-col">
+        <h4>Visit</h4>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">Conditions</a></li>
+          <li><a href="#">3D Spine</a></li>
+          <li><a href="#">Patient Tools</a></li>
+          <li><a href="#">Education</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+        <h4>Care</h4>
+        <ul>
+          <li><a href="#">New Patient Info</a></li>
+          <li><a href="#">Insurance</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Book Appointment</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Notice of Privacy Practices</a></li>
+          <li><a href="#">Terms</a></li>
+          <li><a href="#">Accessibility</a></li>
+          <li><a href="#">Medical Disclaimer</a></li>
+        </ul>
+        <h4>Connect</h4>
+        <div class="foot-social">
+          <a href="#" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 22v-8h3l1-4h-4V7.5c0-1.2.4-2 2-2h2V2.2C16.6 2.1 15.4 2 14.2 2 11.5 2 10 3.6 10 6.6V10H7v4h3v8h3z"/></svg>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 7A1.94 1.94 0 1 1 5 5.06 1.94 1.94 0 0 1 6.94 7zM5.2 9h3.5v12H5.2zM11 9h3.3v1.65A3.65 3.65 0 0 1 17.6 9c3.4 0 4 2.25 4 5.18V21h-3.5v-5.93c0-1.42 0-3.24-2-3.24S14 13.4 14 14.94V21h-3z"/></svg>
+          </a>
+          <a href="#" aria-label="Google">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 11v3.2h5.3c-.2 1.3-1.6 3.8-5.3 3.8a6 6 0 0 1 0-12 5.3 5.3 0 0 1 3.8 1.5l2.6-2.5A8.8 8.8 0 0 0 12 3a9 9 0 1 0 0 18c5.2 0 8.6-3.7 8.6-8.8 0-.6 0-1-.1-1.5H12z"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="foot-bottom">
+      <div>© 2026 Westlake Chiropractic. All rights reserved.</div>
+      <div class="disclaim">This site is for educational purposes and is not a substitute for medical care. For emergencies call 911.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================================================
+     FLOATING — SPINNEY LAUNCHER
+=====================================================-->
+<button class="spinney-launcher" id="spinneyLauncher" aria-label="Ask Spinney, AI assistant">
+  <span class="avatar"><img src="assets/spinney.png" alt=""></span>
+  <span class="lbl">Ask Spinney<span class="small">AI ASSISTANT</span></span>
+</button>
+
+<div class="chat-modal" id="chatModal" role="dialog" aria-label="Spinney AI chat" aria-hidden="true">
+  <button class="close-x" id="chatClose" aria-label="Close chat">✕</button>
+  <h4>Hi, I'm Spinney.</h4>
+  <p>The AI assistant for Westlake Chiropractic — coming soon.</p>
+  <div class="chat-msg">
+    <div class="from">SPINNEY</div>
+    Ask me about conditions, what to expect on your first visit, or how chiropractic care works. I'll point you in the right direction.
+  </div>
+  <div class="chat-disclaim">
+    AI chat assistant — coming soon. Spinney is not a medical professional and does not provide diagnosis or treatment. For medical advice contact Dr. Herlehy directly. For emergencies call 911.
+  </div>
+</div>
+
+<!-- ===================================================
+     MOBILE STICKY BOOK BAR
+=====================================================-->
+<div class="mobile-book" aria-label="Quick actions">
+  <a href="tel:+15407210044" class="mb mb-amber">Call (540) 721-0044</a>
+  <a href="#book" class="mb mb-ghost">Book Online</a>
+</div>
+
+<script>
+/* ============================================================
+   THEME TOGGLE — persists in localStorage
+   ============================================================ */
+(function () {
+  const saved = localStorage.getItem('wlc-theme');
+  if (saved) document.body.setAttribute('data-theme', saved);
+  const toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', () => {
+    const cur = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', cur);
+    localStorage.setItem('wlc-theme', cur);
+  });
+})();
+
+/* ============================================================
+   NAV SHRINK ON SCROLL
+   ============================================================ */
+(function () {
+  const nav = document.getElementById('nav');
+  const onScroll = () => {
+    if (window.scrollY > 80) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+/* ============================================================
+   SCROLL REVEAL — IntersectionObserver, threshold 0.15
+   ============================================================ */
+(function () {
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+})();
+
+/* ============================================================
+   SPINNEY CHAT — open/close modal
+   ============================================================ */
+(function () {
+  const btn = document.getElementById('spinneyLauncher');
+  const modal = document.getElementById('chatModal');
+  const close = document.getElementById('chatClose');
+  function open() {
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    requestAnimationFrame(() => modal.classList.add('in'));
+  }
+  function shut() {
+    modal.classList.remove('in');
+    modal.setAttribute('aria-hidden', 'true');
+    setTimeout(() => modal.classList.remove('open'), 280);
+  }
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    modal.classList.contains('open') ? shut() : open();
+  });
+  close.addEventListener('click', shut);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') shut(); });
+})();
+
+/* ============================================================
+   CUSTOM CURSOR — desktop only
+   ============================================================ */
+(function () {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 980px)').matches) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.body.classList.add('has-cursor');
+  const dot = document.querySelector('.cursor-dot');
+  const ring = document.querySelector('.cursor-ring');
+  let rx = window.innerWidth/2, ry = window.innerHeight/2;
+  let dx = rx, dy = ry;
+  document.addEventListener('mousemove', (e) => {
+    dot.style.left = e.clientX + 'px';
+    dot.style.top  = e.clientY + 'px';
+    rx = e.clientX; ry = e.clientY;
+  });
+  // Ring follows with lag
+  function tick() {
+    dx += (rx - dx) * 0.18;
+    dy += (ry - dy) * 0.18;
+    ring.style.left = dx + 'px';
+    ring.style.top  = dy + 'px';
+    requestAnimationFrame(tick);
+  }
+  tick();
+  const interactive = 'a, button, [role="button"], .cond-card, input, select, textarea';
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest(interactive)) document.body.classList.add('cursor-hover');
+  });
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest(interactive)) document.body.classList.remove('cursor-hover');
+  });
+})();
+
+/* ============================================================
+   SMOOTH ANCHOR LINKS (accounts for sticky nav)
+   ============================================================ */
+(function () {
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (id.length <= 1) return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY - 72;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+})();
+</script>
+</body>
+</html>
