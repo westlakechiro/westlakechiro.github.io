@@ -978,6 +978,120 @@ button { font: inherit; cursor: pointer; }
 .cond-foot a:hover { gap: 12px; color: var(--accent-amber-hover); }
 
 /* ============================================================
+   INSIDE THE OFFICE — SECTION 6.5 (real photos)
+   Warm-cream backdrop so it doesn't read clinical. Photo cards
+   share the page's rounded corners + soft shadow language; a
+   subtle desaturate + cool-tone shift harmonizes the indoor
+   warm light with the rest of the blue palette.
+   ============================================================ */
+.office {
+  position: relative;
+  padding: 140px 0;
+  background: var(--bg-warm);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 100% 0%, var(--bg-warm-edge), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 0% 100%, var(--bg-warm-edge), transparent 60%);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+@media (max-width: 768px) { .office { padding: 80px 0; } }
+
+.office-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+@media (max-width: 980px)  { .office-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .office-grid { grid-template-columns: 1fr; gap: 28px; } }
+
+.office-card {
+  display: flex; flex-direction: column;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 18px 48px -28px rgba(15, 41, 66, 0.30);
+  transition: transform 360ms cubic-bezier(.2,.7,.2,1), box-shadow 360ms ease, border-color 280ms ease;
+}
+.office-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-amber);
+  box-shadow: 0 24px 60px -24px rgba(15, 41, 66, 0.34);
+}
+
+.office-figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+}
+.office-figure img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  /* Pull the warm interior tones gently toward the page palette without
+     making the photos look filtered or unnatural. */
+  filter: saturate(0.88) contrast(1.04) brightness(1.02);
+  transition: transform 700ms cubic-bezier(.2,.7,.2,1), filter 360ms ease;
+}
+.office-card:hover .office-figure img { transform: scale(1.04); filter: saturate(0.96) contrast(1.06); }
+
+.office-figure::after {
+  /* faint cool overlay so warm fluorescents/fireplace glow harmonize with the blue palette */
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(15, 41, 66, 0.00) 50%, rgba(15, 41, 66, 0.15) 100%),
+              linear-gradient(135deg, rgba(46, 139, 192, 0.04), transparent 60%);
+  pointer-events: none;
+}
+
+.office-tag {
+  position: absolute;
+  left: 14px; top: 14px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(15, 41, 66, 0.08);
+  border-radius: 999px;
+  padding: 6px 11px;
+  backdrop-filter: blur(4px);
+  z-index: 1;
+}
+
+.office-body {
+  padding: 28px 26px 30px;
+  display: flex; flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+.office-eyebrow {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  color: var(--accent-amber);
+  text-transform: uppercase;
+}
+.office-body h3 {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.15;
+  letter-spacing: -0.018em;
+  color: var(--text-primary);
+  margin: 0;
+}
+.office-body p {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ============================================================
    TESTIMONIALS — SECTION 7
    ============================================================ */
 .testimonials {
@@ -2049,6 +2163,60 @@ footer {
 </section>
 
 <!-- ===================================================
+     SECTION 6.5 — INSIDE THE OFFICE (real photos)
+=====================================================-->
+<section class="office" id="office" aria-label="Inside the office">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">INSIDE THE OFFICE</div>
+      <h2>Care that feels like a living room.</h2>
+      <p>Not the chrome-and-fluorescent kind of clinic. Real rooms, real chairs, real warmth — designed for people who don't love medical offices.</p>
+    </div>
+
+    <div class="office-grid reveal">
+      <article class="office-card">
+        <figure class="office-figure">
+          <img src="assets/orthotic-scanner.jpg"
+               alt="Foot Levelers Orthotic Center scanner at Westlake Chiropractic, with screen and 3D body view foot platform">
+          <span class="office-tag">FITTED ON-SITE</span>
+        </figure>
+        <div class="office-body">
+          <div class="office-eyebrow">FOOT LEVELERS ORTHOTIC CENTER</div>
+          <h3>Custom orthotics, mapped to your gait.</h3>
+          <p>Our scanner reads how you stand and walk in three dimensions. Dr. Brad uses that to fit a pair of orthotics tailored to your feet — often the missing piece for foot, knee, hip, or low-back pain.</p>
+        </div>
+      </article>
+
+      <article class="office-card">
+        <figure class="office-figure">
+          <img src="assets/room-massage.jpg"
+               alt="One of two massage chair rooms at Westlake Chiropractic, with a full-body massage chair, bookshelf, and ambient fireplace screen">
+          <span class="office-tag">TWO ROOMS · ALWAYS OPEN</span>
+        </figure>
+        <div class="office-body">
+          <div class="office-eyebrow">MASSAGE-CHAIR ROOM</div>
+          <h3>Full-body massage chairs.</h3>
+          <p>Two private rooms, each with a full-body massage chair. Use one before your adjustment to loosen up, or after to settle in. Quiet, dim, no rushing.</p>
+        </div>
+      </article>
+
+      <article class="office-card">
+        <figure class="office-figure">
+          <img src="assets/room-lounge.jpg"
+               alt="A second massage chair lounge at Westlake Chiropractic, with side chairs, a salt lamp, and a sailboat painting on the wall">
+          <span class="office-tag">SECOND ROOM</span>
+        </figure>
+        <div class="office-body">
+          <div class="office-eyebrow">A SECOND LOUNGE</div>
+          <h3>Salt lamp, sailboat, soft seats.</h3>
+          <p>The kind of room that reminds you you're not at a clinic — you're somewhere on the lake. Bring a book or a friend; we never run you in and out.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================
      SECTION 7 — TESTIMONIALS
 =====================================================-->
 <section class="testimonials" id="testimonials" aria-label="Patient stories">
@@ -2111,24 +2279,6 @@ footer {
           <div><span class="day">Saturday</span>  <span class="closed">By appointment</span></div>
           <div><span class="day">Sunday</span>    <span class="closed">Closed</span></div>
         </div>
-
-        <ul class="loc-amenities" aria-label="In the office">
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M5 11c0-1.7 1.3-3 3-3h8c1.7 0 3 1.3 3 3v3H5v-3z"/>
-              <path d="M5 14v4M19 14v4M7 18h10"/>
-              <path d="M9 8V6c0-1 1-2 2-2h2c1 0 2 1 2 2v2"/>
-            </svg>
-            <span><strong>Two full-body massage-chair rooms</strong><br><span class="muted">For relaxation before or after your adjustment.</span></span>
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M6 5c0-1 1-2 2-2h2c1 0 2 1 2 2v6l4 4v3a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5z"/>
-              <path d="M6 12h6"/>
-            </svg>
-            <span><strong>Custom orthotics</strong><br><span class="muted">Fitted on-site to support posture and gait.</span></span>
-          </li>
-        </ul>
 
         <div class="loc-ctas">
           <a href="tel:+15407210044" class="btn btn-amber btn-lg">Call Now</a>
