@@ -2818,8 +2818,49 @@ else window.addEventListener('load', initInteractiveSpine);
   function normalize(s) {
     return String(s).toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
   }
+  // Light stemmer: collapse common English suffixes so "located"/"locating"/
+  // "locations" all converge to a similar root. Not a full morphology engine —
+  // a few targeted suffix rules cover ~80% of the variation we see in chat.
+  function stem(w) {
+    if (w.length < 5) return w;
+    const sufs = ['ations','ation','tions','tion','ings','ing','ied','ies','ied','ed','es','ly'];
+    for (const suf of sufs) {
+      if (w.endsWith(suf) && w.length - suf.length >= 3) { w = w.slice(0, -suf.length); break; }
+    }
+    if (w.endsWith('s') && !w.endsWith('ss') && w.length > 4) w = w.slice(0, -1);
+    // Collapse a final doubled consonant left over from suffix stripping
+    // (e.g., "cancellation" -> "cancell" -> "cancel", "stopped" -> "stopp" -> "stop").
+    if (w.length >= 4 && w[w.length-1] === w[w.length-2] && /[bcdfghjklmnpqrstvwxz]/.test(w[w.length-1])) {
+      w = w.slice(0, -1);
+    }
+    return w;
+  }
+  // Expand a token via the KB synonyms table BEFORE stemming, so user-side
+  // shorthand ("appt", "preggo", "hurts") gets canonicalized first.
+  function expand(t) {
+    if (kb && kb.synonyms && Object.prototype.hasOwnProperty.call(kb.synonyms, t)) {
+      const v = kb.synonyms[t];
+      return v ? v : t;
+    }
+    return t;
+  }
   function tokenize(s) {
-    return normalize(s).split(' ').filter(t => t.length > 1 && !STOP.has(t));
+    const raw = normalize(s).split(' ').filter(t => t.length > 1 && !STOP.has(t));
+    // Expand synonyms first (may produce multi-word values like "lower back");
+    // re-split, then drop stop words again, then stem.
+    const expanded = [];
+    for (const t of raw) {
+      const ex = expand(t);
+      for (const p of ex.split(' ')) {
+        if (p.length > 1 && !STOP.has(p)) expanded.push(stem(p));
+      }
+    }
+    return expanded;
+  }
+  function bigrams(tokens) {
+    const out = [];
+    for (let i = 0; i < tokens.length - 1; i++) out.push(tokens[i] + ' ' + tokens[i+1]);
+    return out;
   }
 
   function addMessage(html, who) {
@@ -2857,6 +2898,7 @@ else window.addEventListener('load', initInteractiveSpine);
     if (!kb || !kb.qa) return null;
     const queryTokens = tokenize(text);
     if (queryTokens.length === 0) return null;
+    const queryBigrams = new Set(bigrams(queryTokens));
     const queryNorm = normalize(text);
 
     let bestEntry = null;
@@ -2867,30 +2909,39 @@ else window.addEventListener('load', initInteractiveSpine);
       let entryBest = 0;
       for (const phrase of phrasings) {
         const phraseNorm = normalize(phrase);
-        const phraseTokens = new Set(tokenize(phrase));
+        const phraseTokensArr = tokenize(phrase);
+        const phraseTokens = new Set(phraseTokensArr);
         if (phraseTokens.size === 0) continue;
 
+        // Unigram overlap — full match worth 1, partial (substring) worth 0.5
         let overlap = 0;
         for (const qt of queryTokens) {
           if (phraseTokens.has(qt)) {
             overlap += 1;
           } else if (qt.length > 4) {
-            // partial match: query token is substring of a phrase token (or vice versa)
             for (const pt of phraseTokens) {
               if (pt.length > 4 && (pt.includes(qt) || qt.includes(pt))) { overlap += 0.5; break; }
             }
           }
         }
         let score = overlap / queryTokens.length;
+
+        // Bigram bonus — strong signal that the phrasing actually matches
+        const phraseBigrams = new Set(bigrams(phraseTokensArr));
+        let bgHits = 0;
+        for (const bg of queryBigrams) if (phraseBigrams.has(bg)) bgHits++;
+        if (bgHits > 0) score += Math.min(0.30, bgHits * 0.18);
+
         // Substring bonus when the user's whole input lives inside (or vice versa)
         if (queryNorm.length > 4 && (phraseNorm.includes(queryNorm) || queryNorm.includes(phraseNorm))) {
           score += 0.35;
         }
+
         if (score > entryBest) entryBest = score;
       }
       if (entryBest > bestScore) { bestScore = entryBest; bestEntry = entry; }
     }
-    return bestScore >= 0.42 ? { entry: bestEntry, score: bestScore } : null;
+    return bestScore >= 0.36 ? { entry: bestEntry, score: bestScore } : null;
   }
 
   function handleQuery(text) {
